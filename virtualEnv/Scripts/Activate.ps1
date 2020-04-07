@@ -27,7 +27,7 @@ function global:deactivate ([switch]$NonDestructive) {
 
 deactivate -nondestructive
 
-$env:VIRTUAL_ENV="C:\LostnFoundApp\virtualEnv"
+$env:VIRTUAL_ENV="C:\Users\Harish\SEProject\SE-Project\virtualEnv"
 
 if (! $env:VIRTUAL_ENV_DISABLE_PROMPT) {
     # Set the prompt to include the env name
