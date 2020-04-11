@@ -21,3 +21,10 @@ class Users(db.Model):
     
     def get_password(self, pwd):
         return check_password_hash(self.pwd, pwd)
+    
+    @staticmethod
+    def isCredentialsCorrect(email, password):
+        user = db.session.query(Users).filter(Users.email == email).first()
+        if user and user.get_password(password):
+            return True
+        return False

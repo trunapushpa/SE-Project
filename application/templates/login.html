@@ -1,7 +1,27 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div>
-    <h1>Not yet implemented</h1>
+<div class="container">
+    <form name="loginform" method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email }}
+            {% for errors in form.email.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password }}
+            {% for errors in form.password.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
+    
 </div>
 {% endblock %}
