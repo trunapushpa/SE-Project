@@ -3,20 +3,46 @@
 <h2>New User Registration</h2>
 <br>
 <div class="container">
-    <form name="registerform" method="GET">
-        <label for="firstname"><b>First Name</b></label>
-        <input type="text" placeholder="Enter First Name" name="firstname" required>
-        <br>
-        <label for="lastname"><b>Last Name</b></label>
-        <input type="text" placeholder="Enter Last Name" name="lastname">
-        <br>
-        <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required>
-        <br>
-        <label for="password"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
-        <br class="clear">
-        <input class="btn-submit" type="submit" name="submit">
+    <form name="registerform" method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.email.label }}<br>
+            <span class="registerinput">{{ form.email }}</span>
+            {% for error in form.email.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.first_name.label }}<br>
+            {{ form.first_name }}
+            {% for error in form.first_name.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.last_name.label }}<br>
+            {{ form.last_name }}
+            {% for error in form.last_name.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password }}
+            {% for error in form.password.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.confirmPassword.label }}<br>
+            {{ form.confirmPassword }}
+            {% for error in form.confirmPassword.errors %}
+                <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
     </form>
 </div>
 {% endblock %}
