@@ -1,5 +1,7 @@
-from application import app
+from application import app, db
 from flask import render_template
+import application.dbModels.users
+from application.dbModels.users import Users
 
 @app.route("/")
 @app.route("/home")
