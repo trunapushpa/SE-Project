@@ -21,7 +21,11 @@
                     <span class="error-message">{{ error }}</span>
                 {% endfor %}
             </div>
-            {{ form.submit(value='Sign in', class='btn btn-primary my-4') }}
+            {% if not session['theme'] or session['theme'] == 'litera' %}
+                {{ form.submit(value='Sign in', class='btn btn-outline-primary my-4') }}
+            {% else %}
+                {{ form.submit(value='Sign in', class='btn btn-primary my-4') }}
+            {% endif %}
         </form>
     </div>
 {% endblock %}
