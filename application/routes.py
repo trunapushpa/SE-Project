@@ -71,3 +71,8 @@ def logout():
     session['email'] = False
     flash("Logged out", "success")
     return redirect("/home")
+
+
+@app.errorhandler(Exception)
+def all_exception_handler(e):
+    return render_template("error.html", error=e), 500
