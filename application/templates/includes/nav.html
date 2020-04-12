@@ -1,32 +1,52 @@
 <header>
-    <nav>
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a href="{{ url_for ('index') }}" class="nav-link
-                {% if index %} active {% endif %}">Home</a>
-            </li>
-            {% if session['email'] %}
-            <li class="nav-item"><a href="{{ url_for ('myitems') }}" class="nav-link
-                {% if myitems %} active {% endif %}">My Items</a>
-            </li>
-            <li class="nav-item"><a href="{{ url_for ('uploaditem') }}" class="nav-link
-                {% if uploaditem %} active {% endif %}">Upload Item</a>
-            </li>
-            <li class="nav-item"><a href="{{ url_for ('myprofile') }}" class="nav-link
-                {% if myprofile %} active {% endif %}">My Profile</a>
-            </li>
-            {% endif %}
-            {% if not session['email'] %}
-            <li class="nav-item"><a href="{{ url_for ('register') }}" class="nav-link
-                {% if register%} active {% endif %}">Sign Up</a>
-            </li>
-            <li class="nav-item"><a href="{{ url_for ('login') }}" class="nav-link
-                {% if login %} active {% endif %}">Login</a>
-            </li>
-            {% else %}
-            <li class="nav-item"><a href="{{ url_for ('logout') }}" class="nav-link">Logout</a>
-            </li>
-            {% endif %}
-        </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for ('index') }}">
+                <img src="static/images/LF.svg" class="lf-logo" alt="">
+                &nbsp; &nbsp; Lost & Found
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                    aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    {% if session['email'] %}
+                        <li class="nav-item {% if uploaditem %} active {% endif %}">
+                            <a href="{{ url_for ('uploaditem') }}" class="nav-link">Upload Item</a>
+                        </li>
+                        <li class="nav-item {% if myitems %} active {% endif %}">
+                            <a href="{{ url_for ('myitems') }}" class="nav-link">My Items</a>
+                        </li>
+                        <li class="nav-item {% if myprofile %} active {% endif %}">
+                            <a href="{{ url_for ('myprofile') }}" class="nav-link">My Profile</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact Us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav navbar-right">
+                    {% if session['email'] %}
+                        <li class="nav-item">
+                            <a href="{{ url_for ('logout') }}" class="nav-link">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item {% if register %} active {% endif %}">
+                            <a href="{{ url_for ('register') }}" class="nav-link">Sign Up</a>
+                        </li>
+                        <li class="nav-item {% if login %} active {% endif %}">
+                            <a href="{{ url_for ('login') }}" class="nav-link">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                {#                Search in navbar (if needed) #}
+                {#                <form class="form-inline my-2 my-lg-0">#}
+                {#                    <input class="form-control mr-sm-2" type="text" placeholder="Search">#}
+                {#                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>#}
+                {#                </form>#}
+            </div>
+        </div>
     </nav>
-    <hr style="clear: both;">
 </header>

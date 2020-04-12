@@ -9,7 +9,9 @@ from flask.helpers import flash
 @app.route("/")
 @app.route("/home")
 def index():
-    return render_template("helloWorld.html", index = True)
+    if session.get('email'):
+        return render_template("feed.html", index=True)
+    return render_template("landing_page.html", index=True)
 
 @app.route("/myitems")
 def myitems():
