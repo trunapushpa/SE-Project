@@ -18,7 +18,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-    <link rel="stylesheet" href="static/css/flatly-bootstrap.css" media="screen">
+    {% if not session['theme'] %}
+        <link rel="stylesheet" href="static/css/flatly-bootstrap.min.css" media="screen">
+    {% else %}
+        <link rel="stylesheet" href="static/css/{{session['theme']}}-bootstrap.min.css" media="screen">
+    {% endif %}
     <link rel="stylesheet" href="static/css/custom.css">
 </head>
 

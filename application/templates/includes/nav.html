@@ -23,6 +23,22 @@
                             <a href="{{ url_for ('myprofile') }}" class="nav-link">My Profile</a>
                         </li>
                     {% endif %}
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Themes <span
+                                class="caret"></span></a>
+                        <div class="dropdown-menu" aria-labelledby="themes">
+                            <form id="flatly-form" action="/switch_theme/flatly" method="post">
+                                <a href="#" onclick="document.getElementById('flatly-form').submit();" class="dropdown-item">Flatly</a>
+                            </form>
+                            <form id="darkly-form" action="/switch_theme/darkly" method="post">
+                                <a href="#" onclick="document.getElementById('darkly-form').submit();" class="dropdown-item">Darkly</a>
+                            </form>
+                            <form id="sketchy-form" action="/switch_theme/sketchy" method="post">
+                                <a href="#" onclick="document.getElementById('sketchy-form').submit();" class="dropdown-item">Sketchy</a>
+                            </form>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact Us</a>
                     </li>

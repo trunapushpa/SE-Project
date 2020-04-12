@@ -1,5 +1,5 @@
 from application import app, db
-from flask import render_template, redirect, url_for, session
+from flask import render_template, redirect, url_for, session, request
 import application.dbModels.users
 from application.dbModels.users import Users
 from application.forms.RegisterForm import RegisterForm
@@ -12,6 +12,11 @@ def index():
     if session.get('email'):
         return render_template("feed.html", index=True)
     return render_template("landing_page.html", index=True)
+
+@app.route("/switch_theme/<theme>", methods = ['POST'])
+def switch_theme(theme):
+    session['theme'] = theme
+    return redirect(request.referrer)
 
 @app.route("/myitems")
 def myitems():
