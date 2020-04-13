@@ -2,7 +2,7 @@
 .env
 .flaskenv
 *.pyc
-*.cpython*
+*.cpython-37.pyc
 *.pyo
 env/
 env*
