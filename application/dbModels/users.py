@@ -1,8 +1,9 @@
-from application import app, db
-import flask
+from flask_login import UserMixin
+from application import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class Users(db.Model):
+
+class Users(db.Model, UserMixin):
     __tablename__ = 'users'
 
     user_id = db.Column(db.Integer, primary_key = True )
@@ -26,5 +27,22 @@ class Users(db.Model):
     def isCredentialsCorrect(email, password):
         user = db.session.query(Users).filter(Users.email == email).first()
         if user and user.get_password(password):
+<<<<<<< HEAD
             return user
         return None
+=======
+            return True, user
+        return False, None
+
+    def get_id(self):
+        return str(self.user_id)
+
+    def is_active(self):
+        return True
+
+    def is_authenticated(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+>>>>>>> a03e9c378696dbeee1651f6c9749baefee795934

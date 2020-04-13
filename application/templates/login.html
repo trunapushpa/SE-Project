@@ -1,27 +1,39 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container">
-    <form name="loginform" method="POST" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email }}
-            {% for errors in form.email.errors %}
-                <span class="error-message">{{ error }}</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password }}
-            {% for errors in form.password.errors %}
-                <span class="error-message">{{ error }}</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.submit() }}
-        </p>
-    </form>
-    
-</div>
+    <div class="col-lg-6">
+        <div class="page-header "><h1 class="display-4"> Sign in </h1>
+            <hr class="my-4"/>
+        </div>
+        <form name="loginform" method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group {% if form.email.errors %} has-danger {% endif %}">
+                {{ form.email.label }}
+                {% if form.email.errors %}
+                    {{ form.email(class='form-control is-invalid') }}
+                {% else %}
+                    {{ form.email(class='form-control') }}
+                {% endif %}
+                {% for error in form.email.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group {% if form.password.errors %} has-danger {% endif %}">
+                {{ form.password.label }}
+                {% if form.password.errors %}
+                    {{ form.password(class='form-control is-invalid') }}
+                {% else %}
+                    {{ form.password(class='form-control') }}
+                {% endif %}
+                {% for error in form.password.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% if not session['theme'] or session['theme'] == 'litera' %}
+                {{ form.submit(value='Sign in', class='btn btn-outline-primary my-4') }}
+            {% else %}
+                {{ form.submit(value='Sign in', class='btn btn-primary my-4') }}
+            {% endif %}
+        </form>
+    </div>
 {% endblock %}
