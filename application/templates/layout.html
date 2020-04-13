@@ -30,31 +30,34 @@
     {% if not session['theme'] %}
         <link rel="stylesheet" href="static/css/litera-bootstrap.min.css" media="screen">
     {% else %}
-        <link rel="stylesheet" href="static/css/{{session['theme']}}-bootstrap.min.css" media="screen">
+        <link rel="stylesheet" href="static/css/{{ session['theme'] }}-bootstrap.min.css" media="screen">
     {% endif %}
     <link rel="stylesheet" href="static/css/custom.css">
+
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
 </head>
 
 <body>
 {% include "includes/nav.html" %}
 <div class="container" style="margin-top: 110px">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissable">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <div id="messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-dismissable alert-{{ category }}">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
     {% block content %}
 
     {% endblock %}
 </div>
-<script src="static/js/jquery.min.js"></script>
-<script src="static/js/bootstrap.min.js"></script>
 </body>
 
 </html>

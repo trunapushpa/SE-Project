@@ -1,19 +1,16 @@
 import os
-
+import uuid
 import cv2
 from PIL import Image
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
-
-from application import app, db
-from flask import render_template, redirect, url_for, session, request
-import application.dbModels.users
+from application import app, db, login_manager
+from flask import render_template, redirect, url_for, session, request, jsonify
 from application.dbModels.users import Users
 from application.dbModels.items import Items
 from application.forms.RegisterForm import RegisterForm
 from application.forms.LoginForm import LoginForm
 from flask.helpers import flash
-
-from application.forms.UploadForm import UploadForm
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -30,11 +27,15 @@ def allowed_file(filename):
 #     dst = dst.reshape(target_size.shape[0] * target_size.shape[1])
 #     return dst
 
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(user_id)
+
 
 @app.route("/")
 @app.route("/home")
 def index():
-    if session.get('email'):
+    if current_user.is_authenticated:
         return render_template("feed.html", index=True)
     return render_template("landing_page.html", index=True)
 
@@ -46,53 +47,67 @@ def switch_theme(theme):
 
 
 @app.route("/myitems")
+@login_required
 def myitems():
     return render_template("<h1>No items yet</h1>")
 
 
-@app.route("/uploaditem")
-def uploadform():
-    form = UploadForm()
-    return render_template("upload.html", form=form)
+# TODO: Fix twice image upload
+@app.route("/get_item_description", methods=['POST'])
+@login_required
+def get_item_description():
+    if 'file' not in request.files:
+        return 'File not sent in request', 406
+    file = request.files['file']
+    if file.filename == '':
+        return 'No file uploaded', 406
+    if file and allowed_file(file.filename):
+        # TODO: Send Real Description instead of this
+        return jsonify(description=file.filename)
+    else:
+        return 'Allowed file types are png, jpg, jpeg', 415
 
 
-@app.route("/uploaditem", methods=['POST'])
+# TODO: Add date-time picker
+@app.route("/uploaditem", methods=['POST', 'GET'])
+@login_required
 def uploaditem():
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash('Incorrect extension')
-            return redirect(request.url)
+            flash('File not sent in request', 'danger')
+            return redirect(request.url), 406
         file = request.files['file']
         if file.filename == '':
-            flash('NO FILE UPLOADED')
-            return redirect(request.url)
+            flash('No file uploaded', 'danger')
+            return redirect(request.url), 406
         if file and allowed_file(file.filename):
-            tag = request.form['tag']
+            item_type = request.form['type']
             location = request.form['location']
-            caption = request.form['caption']
-            # img = Image.open(file)
-            # featurevector = feature_vector(file)
-            newfile = Items(tag, location, caption, [3, 5])
-            filename = secure_filename(file.filename)
-            db.session.add(newfile)
-            db.session.commit()
+            description = request.form['description']
+            filename = secure_filename(str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower())
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash('File successfully uploaded')
-            return redirect('/home')
+            # TODO: Find Feature Vector
+            feature_vector = [1, 2, 3]
+            new_item = Items(current_user.user_id, item_type, location, filename, description, feature_vector)
+            db.session.add(new_item)
+            db.session.commit()
+            flash('Item successfully uploaded', 'success')
+            return redirect(url_for('index'))
         else:
-            flash('Allowed file types are png, jpg, jpeg')
-            return redirect(request.url)
+            flash('Allowed file types are png, jpg, jpeg', 'warning')
+            return redirect(request.url), 415
     return render_template("upload.html")
 
 
 @app.route("/myprofile")
+@login_required
 def myprofile():
     return render_template("<h1>No yet implemented</h1>")
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    if session.get('email'):
+    if current_user.is_authenticated:
         return redirect('/home')
 
     form = RegisterForm()
@@ -112,16 +127,17 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    if session.get('email'):
+    if current_user.is_authenticated:
         return redirect('/home')
 
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        if Users.isCredentialsCorrect(email, password):
+        auth_success, user = Users.isCredentialsCorrect(email, password)
+        if auth_success:
+            login_user(user)
             flash(f'Successfully logged in !!', "success")
-            session['email'] = email
             return redirect('/home')
         else:
             flash(f'Invalid Username or password. Please try again !!', "danger")
@@ -129,8 +145,9 @@ def login():
 
 
 @app.route('/logout')
+@login_required
 def logout():
-    session['email'] = False
+    logout_user()
     flash("Logged out", "success")
     return redirect("/home")
 

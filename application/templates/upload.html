@@ -1,43 +1,70 @@
-<!doctype html>
-<title>Python Flask File Upload Example</title>
-<h2>Select a file to upload</h2>
-<p>
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-		<ul class=flashes>
-		{% for message in messages %}
-		  <li>{{ message }}</li>
-		{% endfor %}
-		</ul>
-	  {% endif %}
-	{% endwith %}
-</p>
-<form name="uploadform" method="post" enctype="multipart/form-data">
-    <dl>
-		<p>
-            <label for="Tag">Choose a Tag:</label>
-                <select id="Tag" name="tag" required>
-                    <option value="Buy">Buy</option>
-                    <option value="Sell">Sell</option>
-                    <option value="Lost">Lost</option>
-                    <option value="Found">Found</option>
-                </select>
-            <br/>
-            <label for="Location">Choose a Location:</label>
-                <select id="Location" name="location" required>
-                    <option value="Himalaya">Himalaya</option>
-                    <option value="Jc">Jc</option>
-                    <option value="Vindhaya">Vindhaya</option>
-                    <option value="NBH">NBH</option>
-                </select>
-            <label>
-                <p>Caption</p>
-                <input type="text" name="caption" autocomplete="off" required>
-            </label><br/><br/><br/>
-            <input type="file" name="file" autocomplete="off" required>
-		</p>
-    </dl>
-    <p>
-		<input type="submit" value="Submit">
-	</p>
-</form>
+{% extends "layout.html" %}
+{% block content %}
+    <div class="col-lg-6">
+        <div class="page-header "><h1 class="display-4"> Upload an Item </h1>
+            <hr class="my-4"/>
+        </div>
+        <form name="uploadform" method="post" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-outline-primary active">
+                        <input type="radio" name="type" id="lost" value="lost" autocomplete="off" checked=""> Lost
+                    </label>
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="type" value="found" id="found" autocomplete="off"> Found
+                    </label>
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="type" value="buy" id="buy" autocomplete="off"> Buy
+                    </label>
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="type" value="sell" id="sell" autocomplete="off"> Sell
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input" id="file">
+                        <label class="custom-file-label" for="file">Choose an Image</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="location">Location</label>
+                    </div>
+                    <select class="custom-select" id="location" name="location" required>
+                        <option value="unknown" selected="">Unknown</option>
+                        <option value="Himalaya">Himalaya</option>
+                        <option value="JC">JC</option>
+                        <option value="Vindhya">Vindhya</option>
+                        <option value="NBH">NBH</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="loading-description" class="text-center m-lg-5">
+                <div class="spinner-grow text-primary">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div id="description-and-submit">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Object Description</span>
+                        </div>
+                        <textarea id="item-description" class="form-control" name="description" aria-label="Description"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+    <script src="static/js/upload.js"></script>
+{% endblock %}
