@@ -21,7 +21,9 @@ def uploaditem():
 
 @app.route("/myprofile")
 def myprofile():
-    return render_template("<h1>No yet implemented</h1>")
+    if session.get('email'):
+        data = session
+    return render_template("myprofile.html", myprofile=True, data = data)
 
 @app.route("/register", methods = ['GET', 'POST'])
 def register():
@@ -51,9 +53,13 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        if Users.isCredentialsCorrect(email, password):
+        user = Users.isCredentialsCorrect(email, password)
+        if user != None:
             flash(f'Successfully logged in !!', "success")
-            session['email'] = email
+            session['email'] = user.email
+            session['user_id'] = user.user_id
+            session['firstName'] = user.first_name
+            session['lastName'] = user.last_name
             return redirect('/home')
         else:
             flash(f'Invalid Username or password. Please try again !!', "danger")

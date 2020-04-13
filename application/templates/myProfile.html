@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="container">
+    <div align="center">
+        <p>
+            <b>First Name:</b>
+            {{data.get('firstName')}}</br>
+            <b>Last Name:</b>
+            {{data.get('lastName')}}</br>
+            <b>Email:</b>
+            {{data.get('email')}}
+        </p>
+    </div>
+</div>
+
+{% endblock %}

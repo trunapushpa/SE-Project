@@ -26,5 +26,5 @@ class Users(db.Model):
     def isCredentialsCorrect(email, password):
         user = db.session.query(Users).filter(Users.email == email).first()
         if user and user.get_password(password):
-            return True
-        return False
+            return user
+        return None
