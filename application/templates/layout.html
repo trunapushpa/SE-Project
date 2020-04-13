@@ -13,10 +13,19 @@
     <link rel="shortcut icon" href="static/images/favicon/favicon.ico">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-config" content="static/images/favicon/browserconfig.xml">
-    <meta name="theme-color" content="#2c3e50">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    {% if session['theme'] == 'sketchy' %}
+        <meta name="theme-color" content="#333">
+    {% elif session['theme'] == 'flatly' %}
+        <meta name="theme-color" content="#2C3E50">
+    {% elif session['theme'] == 'darkly' %}
+        <meta name="theme-color" content="#375a7f">
+    {% else %}
+        <meta name="theme-color" content="#fff">
+    {% endif %}
 
     {% if not session['theme'] %}
         <link rel="stylesheet" href="static/css/litera-bootstrap.min.css" media="screen">
