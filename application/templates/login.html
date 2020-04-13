@@ -7,18 +7,26 @@
         </div>
         <form name="loginform" method="POST" novalidate>
             {{ form.hidden_tag() }}
-            <div class="form-group">
+            <div class="form-group {% if form.email.errors %} has-danger {% endif %}">
                 {{ form.email.label }}
-                {{ form.email(class='form-control') }}
-                {% for errors in form.email.errors %}
-                    <span class="error-message">{{ error }}</span>
+                {% if form.email.errors %}
+                    {{ form.email(class='form-control is-invalid') }}
+                {% else %}
+                    {{ form.email(class='form-control') }}
+                {% endif %}
+                {% for error in form.email.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.password.errors %} has-danger {% endif %}">
                 {{ form.password.label }}
-                {{ form.password(class='form-control') }}
-                {% for errors in form.password.errors %}
-                    <span class="error-message">{{ error }}</span>
+                {% if form.password.errors %}
+                    {{ form.password(class='form-control is-invalid') }}
+                {% else %}
+                    {{ form.password(class='form-control') }}
+                {% endif %}
+                {% for error in form.password.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
             {% if not session['theme'] or session['theme'] == 'litera' %}

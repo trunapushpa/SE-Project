@@ -6,39 +6,61 @@
         </div>
         <form name="registerform" method="POST" novalidate>
             {{ form.hidden_tag() }}
-            <div class="form-group">
+            <div class="form-group row {% if form.first_name.errors or form.last_name.errors %} has-danger {% endif %}">
+                <div class="col">
+                    {{ form.first_name.label }}
+                    {% if form.first_name.errors %}
+                        {{ form.first_name(class='form-control is-invalid') }}
+                    {% else %}
+                        {{ form.first_name(class='form-control') }}
+                    {% endif %}
+                    {% for error in form.first_name.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col">
+                    {{ form.last_name.label }}
+                    {% if form.last_name.errors %}
+                        {{ form.last_name(class='form-control is-invalid') }}
+                    {% else %}
+                        {{ form.last_name(class='form-control') }}
+                    {% endif %}
+                    {% for error in form.last_name.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group {% if form.email.errors %} has-danger {% endif %}">
                 {{ form.email.label }}
-                {{ form.email(class='form-control') }}
+                {% if form.email.errors %}
+                    {{ form.email(class='form-control is-invalid') }}
+                {% else %}
+                    {{ form.email(class='form-control') }}
+                {% endif %}
                 {% for error in form.email.errors %}
-                    <span class="error-message">{{ error }}</span>
+                    <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
-            <div class="form-group">
-                {{ form.first_name.label }}
-                {{ form.first_name(class='form-control') }}
-                {% for error in form.first_name.errors %}
-                    <span class="error-message">{{ error }}</span>
-                {% endfor %}
-            </div>
-            <div class="form-group">
-                {{ form.last_name.label }}
-                {{ form.last_name(class='form-control') }}
-                {% for error in form.last_name.errors %}
-                    <span class="error-message">{{ error }}</span>
-                {% endfor %}
-            </div>
-            <div class="form-group">
+            <div class="form-group {% if form.password.errors %} has-danger {% endif %}">
                 {{ form.password.label }}
-                {{ form.password(class='form-control') }}
+                {% if form.password.errors %}
+                    {{ form.password(class='form-control is-invalid') }}
+                {% else %}
+                    {{ form.password(class='form-control') }}
+                {% endif %}
                 {% for error in form.password.errors %}
-                    <span class="error-message">{{ error }}</span>
+                    <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.confirmPassword.errors %} has-danger {% endif %}">
                 {{ form.confirmPassword.label }}
-                {{ form.confirmPassword(class='form-control') }}
+                {% if form.confirmPassword.errors %}
+                    {{ form.confirmPassword(class='form-control is-invalid') }}
+                {% else %}
+                    {{ form.confirmPassword(class='form-control') }}
+                {% endif %}
                 {% for error in form.confirmPassword.errors %}
-                    <span class="error-message">{{ error }}</span>
+                    <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
             {% if not session['theme'] or session['theme'] == 'litera' %}

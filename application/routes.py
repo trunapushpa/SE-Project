@@ -1,5 +1,7 @@
 import os
+import time
 import uuid
+from datetime import datetime
 import cv2
 from PIL import Image
 from flask_login import login_user, login_required, logout_user, current_user
@@ -62,13 +64,12 @@ def get_item_description():
     if file.filename == '':
         return 'No file uploaded', 406
     if file and allowed_file(file.filename):
-        # TODO: Send Real Description instead of this
+        # TODO: Send Real Description instead of file.filename
         return jsonify(description=file.filename)
     else:
         return 'Allowed file types are png, jpg, jpeg', 415
 
 
-# TODO: Add date-time picker
 @app.route("/uploaditem", methods=['POST', 'GET'])
 @login_required
 def uploaditem():
@@ -84,11 +85,15 @@ def uploaditem():
             item_type = request.form['type']
             location = request.form['location']
             description = request.form['description']
+            input_date = request.form['date']
+            input_time = request.form['time']
+            timestamp = time.mktime(time.strptime(input_date + " " + input_time, "%Y-%m-%d %H:%M"))
             filename = secure_filename(str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower())
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # TODO: Find Feature Vector
             feature_vector = [1, 2, 3]
-            new_item = Items(current_user.user_id, item_type, location, filename, description, feature_vector)
+            new_item = Items(current_user.user_id, item_type, location, filename, description, timestamp,
+                             feature_vector)
             db.session.add(new_item)
             db.session.commit()
             flash('Item successfully uploaded', 'success')
@@ -96,7 +101,8 @@ def uploaditem():
         else:
             flash('Allowed file types are png, jpg, jpeg', 'warning')
             return redirect(request.url), 415
-    return render_template("upload.html")
+    return render_template("upload.html", date=datetime.now().strftime("%Y-%m-%d"),
+                           time=datetime.now().strftime("%H:%M"))
 
 
 @app.route("/myprofile")

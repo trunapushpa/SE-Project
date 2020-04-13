@@ -2,6 +2,14 @@ $(document).ready(function () {
     $('#loading-description').hide();
 });
 
+$('input[type=radio][name=type]').change(function() {
+    if(this.value === 'lost' || this.value === 'found') {
+        $('#date-time-picker').show();
+    } else {
+        $('#date-time-picker').hide();
+    }
+});
+
 let startLoading = function() {
     $('#loading-description').show();
     $('#description-and-submit').hide();
