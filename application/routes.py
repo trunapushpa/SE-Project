@@ -14,6 +14,9 @@ from application.forms.RegisterForm import RegisterForm
 from application.forms.LoginForm import LoginForm
 from flask.helpers import flash
 
+from application.forms.UpdateNameForm import UpdateNameForm
+from application.forms.UpdatePwdForm import UpdatePwdForm
+
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
@@ -105,10 +108,46 @@ def uploaditem():
                            time=datetime.now().strftime("%H:%M"))
 
 
-@app.route("/myprofile")
+@app.route("/userprofile")
 @login_required
 def myprofile():
-    return render_template("<h1>No yet implemented</h1>")
+    return render_template("user_profile.html", index=True)
+
+
+@app.route('/updatename', methods=["GET", "POST"])
+@login_required
+def update_name():
+    form = UpdateNameForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            user = current_user
+            user.first_name = form.first_name.data
+            user.last_name = form.last_name.data
+            db.session.add(user)
+            db.session.commit()
+            flash('Name changed!', 'success')
+            return redirect(url_for('myprofile'))
+    return render_template('updateName.html', form=form)
+
+
+@app.route('/password_change', methods=["GET", "POST"])
+@login_required
+def user_password_change():
+    form = UpdatePwdForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            user = current_user
+            user.pwd = form.password.data
+            user.set_password(user.pwd)
+            db.session.add(user)
+            db.session.commit()
+            flash('Password has been updated!', 'success')
+            return redirect(url_for('myprofile'))
+        else:
+            print("elsee")
+            flash('Password and Confirmed Password does not match!!', 'danger')
+
+    return render_template('updatePwd.html', form=form)
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -126,6 +165,7 @@ def register():
         newUser.set_password(password)
         db.session.add(newUser)
         db.session.commit()
+        login_user(newUser)
         flash(f"Congratulations {firstname}, You are successfully registered.", "success")
         return redirect(url_for('login'))
     return render_template("register.html", register=True, form=form)
