@@ -1,32 +1,85 @@
 {% extends "layout.html" %}
 {% block content %}
-
-    <div class="my-items">
-        <div class="page-header">
-            <h2 class="display-4">My Items</h2>
-        </div> <br/>
-
-        <div class="row">
-            <table class="table table-striped" id="my_items">
-                <thead>
-                <tr>
-                    <th>Item Type</th>
-                    <th>Location</th>
-                    <th>Timestamp</th>
-                    <th>Caption</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in items %}
-                    <tr>
-                        <td> {{ item.type }} </td>
-                        <td> {{ item.location }} </td>
-                        <td> {{ item.timestamp }} </td>
-                        <td> {{ item.caption }} </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="page-header">
+        <h2 class="display-4">My Items</h2>
     </div>
+    <br/>
+
+    <div class="card-columns">
+
+        {% for item in items %}
+            {#            TODO: Shift this logic in backend#}
+            {% if item.user_id == current_user.user_id %}
+                <div class="card mb-3">
+                    <img class="card-img-top" src="{{ 'static/images/UploadedImages' + '/' + item.image_path }}"
+                         alt="Card image cap">
+                    <div class="card-body">
+                        <h2 class="card-title" style="text-transform:capitalize;">
+                            {{ item.type }}
+                        </h2>
+                        <h4 class="card-text">{{ item.caption }}</h4>
+                        <p></p>
+                        <p class="card-text">
+                            Location: {{ item.location }}<br/>
+                            Date: {{ item.timestamp.day }}-{{ item.timestamp.month }}-{{ item.timestamp.year }}<br/>
+                            Time: {{ item.timestamp.hour }}:{{ item.timestamp.minute }}
+                        </p>
+                        {% if item.active %}
+                            <a href="{{ url_for('change_item_state', item_id=item.item_id, state='inactive') }}" class="card-link">Mark
+                                Inactive</a>
+                        {% else %}
+                            <a href="{{ url_for('change_item_state', item_id=item.item_id, state='active') }}" class="card-link">Mark
+                                Active</a>
+                        {% endif %}
+
+                        <a href="{{ url_for('delete_item', item_id=item.item_id) }}" class="card-link">Delete</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {#        <div class="row">#}
+    {#            <table class="table table-striped" id="my_items">#}
+    {#                <thead>#}
+    {#                <tr>#}
+    {#                    <th>ID</th>#}
+    {#                    <th>Item Type</th>#}
+    {#                    <th>Location</th>#}
+    {#                    <th>Timestamp</th>#}
+    {#                    <th>Caption</th>#}
+    {#                </tr>#}
+    {#                </thead>#}
+    {#                <tbody>#}
+    {#                {% for item in items %}#}
+    {#                    <tr>#}
+    {#                        <td> {{ item.item_id }} </td>#}
+    {#                        <td> {{ item.type }} </td>#}
+    {#                        <td> {{ item.location }} </td>#}
+    {#                        <td> {{ item.timestamp }} </td>#}
+    {#                        <td> {{ item.caption }} </td>#}
+    {#                    </tr>#}
+    {#                {% endfor %}#}
+    {#                </tbody>#}
+    {#            </table>#}
+    {#        </div>#}
+    <script>
+        {% if session['theme'] == 'darkly' %}
+            $('.card').hover(
+                function () {
+                    $(this).toggleClass('shadow');
+                    $(this).toggleClass('bg-secondary');
+                    $(this).toggleClass('border-secondary');
+                }
+            );
+        {% else %}
+            $('.card').hover(
+                function () {
+                    $(this).toggleClass('shadow');
+                    $(this).toggleClass('bg-light');
+                    $(this).toggleClass('border-secondary');
+                }
+            );
+        {% endif %}
+    </script>
 {% endblock %}

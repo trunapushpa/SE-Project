@@ -60,6 +60,20 @@ def myitems():
     return render_template("my_items.html", items=items)
 
 
+@app.route("/delete_item/<item_id>", methods=['GET'])
+@login_required
+def delete_item(item_id):
+    flash('Successfully Deleted', 'success')
+    return redirect(url_for('myitems'))
+
+
+@app.route("/change_item_state/<item_id>/<state>", methods=['GET'])
+@login_required
+def change_item_state(item_id, state):
+    flash(f"Item marked {state}", 'success')
+    return redirect(url_for('myitems'))
+
+
 # TODO: Fix twice image upload
 @app.route("/get_item_description", methods=['POST'])
 @login_required
@@ -103,7 +117,7 @@ def uploaditem():
             db.session.add(new_item)
             db.session.commit()
             flash('Item successfully uploaded', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('myitems'))
         else:
             flash('Allowed file types are png, jpg, jpeg', 'warning')
             return redirect(request.url), 415
