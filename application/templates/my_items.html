@@ -38,31 +38,6 @@
             {% endif %}
         {% endfor %}
     </div>
-
-    {#        <div class="row">#}
-    {#            <table class="table table-striped" id="my_items">#}
-    {#                <thead>#}
-    {#                <tr>#}
-    {#                    <th>ID</th>#}
-    {#                    <th>Item Type</th>#}
-    {#                    <th>Location</th>#}
-    {#                    <th>Timestamp</th>#}
-    {#                    <th>Caption</th>#}
-    {#                </tr>#}
-    {#                </thead>#}
-    {#                <tbody>#}
-    {#                {% for item in items %}#}
-    {#                    <tr>#}
-    {#                        <td> {{ item.item_id }} </td>#}
-    {#                        <td> {{ item.type }} </td>#}
-    {#                        <td> {{ item.location }} </td>#}
-    {#                        <td> {{ item.timestamp }} </td>#}
-    {#                        <td> {{ item.caption }} </td>#}
-    {#                    </tr>#}
-    {#                {% endfor %}#}
-    {#                </tbody>#}
-    {#            </table>#}
-    {#        </div>#}
     <script>
         {% if session['theme'] == 'darkly' %}
             $('.card').hover(
