@@ -1,27 +1,98 @@
-{#% extends "layout.html" %}#}
-{% from "_form_macros.html" import render_field %}
-{#{% block content %}#}
+{% extends "layout.html" %}
+{% block content %}
+    <div class="col-lg-6">
+        <div class="page-header "><h1 class="display-4"> My Profile </h1>
+        </div>
 
-<div class="user-profile">
-  <div class="page-header">
-    <h2>User Profile</h2>
-  </div>
+        <ul class="nav nav-tabs my-4">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#update-name">Update Name</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#update-pwd">Update Password</a>
+            </li>
+        </ul>
 
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="panel panel-primary">
-        <div class="panel-heading">Email Address</div>
-        <div class="panel-body">{{current_user.email}}</div>
-      </div>
+        <div id="tabContents" class="tab-content">
+            <div class="tab-pane fade active show" id="update-name">
+                <form name="updateName" class="my-4" action="{{ url_for('update_name') }}" method="POST" novalidate>
+                    {{ update_name_form.hidden_tag() }}
+                    <div class="form-group">
+                        <fieldset disabled="">
+                            <label class="control-label" for="disabledInput">Email</label>
+                            <input class="form-control" id="disabledInput" type="text"
+                                   placeholder="{{ current_user.email }}"
+                                   disabled="">
+                        </fieldset>
+                    </div>
+                    <div class="form-group row {% if update_name_form.first_name.errors or update_name_form.last_name.errors %} has-danger {% endif %}">
+                        <div class="col">
+                            {{ update_name_form.first_name.label }}
+                            {% if update_name_form.first_name.errors %}
+                                {{ update_name_form.first_name(class='form-control is-invalid', value=current_user.first_name) }}
+                            {% else %}
+                                {{ update_name_form.first_name(class='form-control', value=current_user.first_name) }}
+                            {% endif %}
+                            {% for error in update_name_form.first_name.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col">
+                            {{ update_name_form.last_name.label }}
+                            {% if update_name_form.last_name.errors %}
+                                {{ update_name_form.last_name(class='form-control is-invalid', value=current_user.last_name) }}
+                            {% else %}
+                                {{ update_name_form.last_name(class='form-control', value=current_user.last_name) }}
+                            {% endif %}
+                            {% for error in update_name_form.last_name.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
 
-      <div class="panel panel-info">
-        <div class="panel-heading">Account Actions</div>
-        <div class="panel-body"><a href="{{ url_for('update_name') }}">Change Name</a></div>
-        <div class="panel-body"><a href="{{ url_for('user_password_change') }}">Change Password</a></div>
-      </div>
+                    {% if not session['theme'] or session['theme'] == 'litera' %}
+                        {{ update_name_form.submit(value='Submit', class='btn btn-outline-primary my-4') }}
+                    {% else %}
+                        {{ update_name_form.submit(value='Submit', class='btn btn-primary my-4') }}
+                    {% endif %}
+                </form>
+            </div>
 
+            <div class="tab-pane fade" id="update-pwd">
+                <form name="updatePwd" class="my-4" action="{{ url_for('user_password_change') }}" method="POST"
+                      novalidate>
+                    {{ update_pwd_form.hidden_tag() }}
+
+                    <div class="form-group {% if update_pwd_form.password.errors %} has-danger {% endif %}">
+                        {{ update_pwd_form.password.label }}
+                        {% if update_pwd_form.password.errors %}
+                            {{ update_pwd_form.password(class='form-control is-invalid') }}
+                        {% else %}
+                            {{ update_pwd_form.password(class='form-control') }}
+                        {% endif %}
+                        {% for error in update_pwd_form.password.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group {% if update_pwd_form.confirmPassword.errors %} has-danger {% endif %}">
+                        {{ update_pwd_form.confirmPassword.label }}
+                        {% if update_pwd_form.confirmPassword.errors %}
+                            {{ update_pwd_form.confirmPassword(class='form-control is-invalid') }}
+                        {% else %}
+                            {{ update_pwd_form.confirmPassword(class='form-control') }}
+                        {% endif %}
+                        {% for error in update_pwd_form.confirmPassword.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    {% if not session['theme'] or session['theme'] == 'litera' %}
+                        {{ update_pwd_form.submit(value='Submit', class='btn btn-outline-primary my-4') }}
+                    {% else %}
+                        {{ update_pwd_form.submit(value='Submit', class='btn btn-primary my-4') }}
+                    {% endif %}
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-
-{#{% endblock %}#}
+{% endblock %}

@@ -114,43 +114,47 @@ def uploaditem():
 @app.route("/userprofile")
 @login_required
 def myprofile():
-    return render_template("user_profile.html", index=True)
+    update_name_form = UpdateNameForm()
+    update_pwd_form = UpdatePwdForm()
+    return render_template("user_profile.html",
+                           update_name_form=update_name_form,
+                           update_pwd_form=update_pwd_form,
+                           myprofile=True)
 
 
-@app.route('/updatename', methods=["GET", "POST"])
+@app.route('/updatename', methods=["POST"])
 @login_required
 def update_name():
     form = UpdateNameForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            user = current_user
-            user.first_name = form.first_name.data
-            user.last_name = form.last_name.data
-            db.session.add(user)
-            db.session.commit()
-            flash('Name changed!', 'success')
-            return redirect(url_for('myprofile'))
-    return render_template('updateName.html', form=form)
+    if form.validate_on_submit():
+        user = current_user
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        db.session.add(user)
+        db.session.commit()
+        flash('Name changed!', 'success')
+        return redirect(url_for('myprofile'))
+    flash('First or Last Name cannot be empty and should not be longer than 50 characters', 'danger')
+    return redirect(url_for('myprofile'))
 
 
-@app.route('/password_change', methods=["GET", "POST"])
+@app.route('/password_change', methods=["POST"])
 @login_required
 def user_password_change():
     form = UpdatePwdForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            user = current_user
-            user.pwd = form.password.data
-            user.set_password(user.pwd)
-            db.session.add(user)
-            db.session.commit()
-            flash('Password has been updated!', 'success')
-            return redirect(url_for('myprofile'))
-        else:
-            print("elsee")
-            flash('Password and Confirmed Password does not match!!', 'danger')
-
-    return render_template('updatePwd.html', form=form)
+    if form.validate_on_submit():
+        user = current_user
+        user.pwd = form.password.data
+        user.set_password(user.pwd)
+        db.session.add(user)
+        db.session.commit()
+        flash('Password has been updated!', 'success')
+        return redirect(url_for('myprofile'))
+    if not form.password.data == form.confirmPassword.data:
+        flash('Password and Confirmed Password does not match!!', 'danger')
+    else:
+        flash('Password should at least 5 characters long', 'danger')
+    return redirect(url_for('myprofile'))
 
 
 @app.route("/register", methods=['GET', 'POST'])

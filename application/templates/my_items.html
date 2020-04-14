@@ -1,33 +1,32 @@
-{#{{% extends "layout.html" %}#}
-{% from "_form_macros.html" import render_field %}
+{% extends "layout.html" %}
+{% block content %}
 
-{#{% block content %}#}
+    <div class="my-items">
+        <div class="page-header">
+            <h2 class="display-4">My Items</h2>
+        </div> <br/>
 
-<div class="my-items">
-  <div class="page-header">
-    <h2>My Items</h2>
-  </div>
-
-  <div class="row">
-    <table class="table table-striped" id="my_items">
-      <thead>
-        <tr>
-          <th>Item Type</th>
-          <th>Location</th>
-          <th>Timestamp</th>
-          <th>Caption</th>
-          </tr>
-      </thead>
-      <tbody>
-        {% for item in items %}
-          <tr>
-            <td> {{ item.type }} </td>
-            <td> {{ item.location }} </td>
-            <td> {{ item.timestamp }} </td>
-            <td> {{ item.caption }} </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
+        <div class="row">
+            <table class="table table-striped" id="my_items">
+                <thead>
+                <tr>
+                    <th>Item Type</th>
+                    <th>Location</th>
+                    <th>Timestamp</th>
+                    <th>Caption</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td> {{ item.type }} </td>
+                        <td> {{ item.location }} </td>
+                        <td> {{ item.timestamp }} </td>
+                        <td> {{ item.caption }} </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
