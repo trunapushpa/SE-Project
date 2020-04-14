@@ -1,3 +1,4 @@
+import json
 import os
 import time
 import uuid
@@ -217,6 +218,14 @@ def logout():
     logout_user()
     flash("Logged out", "success")
     return redirect("/home")
+
+
+@app.route('/about')
+def about():
+    file = open('team.json', 'r')
+    team = json.load(file)
+    print(team)
+    return render_template('about.html', about=True, team=team)
 
 
 @app.errorhandler(Exception)
