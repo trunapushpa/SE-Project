@@ -5,6 +5,7 @@ from datetime import datetime
 import cv2
 from PIL import Image
 from flask_login import login_user, login_required, logout_user, current_user
+from sqlalchemy import create_engine
 from werkzeug.utils import secure_filename
 from application import app, db, login_manager
 from flask import render_template, redirect, url_for, session, request, jsonify
@@ -54,7 +55,9 @@ def switch_theme(theme):
 @app.route("/myitems")
 @login_required
 def myitems():
-    return render_template("<h1>No items yet</h1>")
+    # TODO write query here
+    items = Items.query.order_by(Items.user_id).all()
+    return render_template("my_items.html", items=items)
 
 
 # TODO: Fix twice image upload
