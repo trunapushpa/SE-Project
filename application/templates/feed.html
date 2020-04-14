@@ -1,5 +1,56 @@
 {% extends "layout.html" %}
 
+
 {% block content %}
 <h1 class="display-4">Welcome {{ current_user.first_name }}</h1>
+    <form method="POST" autocomplete="off">
+    <div class='col-xs-12 col-sm-12 col-md-10 col-lg-10'>
+        <div class='input-group'>
+            <input id="autocomplete" class='form-control' type='text' name='autocomplete'
+                   placeholder='Enter item location...'/>
+            <span class="input-group-btn">
+                <a href="{{ url_for('index', location='Himalaya') }}">
+                  <button id="searchBtn" type='submit' class='btn btn-default'>
+                    <span class='btn btn-primary'>Search</span>
+                  </button>
+                </a>
+            </span>
+
+        </div>
+    </div>
+    </form>
+
+    <div class="card-columns">
+
+        {% for item in items %}
+            <div class="card mb-3">
+                <img class="card-img-top" src="{{ 'static/images/UploadedImages' + '/' + item.image_path }}"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title" style="text-transform:capitalize;">
+                        {{ item.type }}
+                    </h2>
+                    <h4 class="card-text">{{ item.caption }}</h4>
+                    <p></p>
+                    <p class="card-text">
+                        Location: {{ item.location }}<br/>
+                        Date: {{ item.timestamp.day }}-{{ item.timestamp.month }}-{{ item.timestamp.year }}<br/>
+                        Time: {{ item.timestamp.hour }}:{{ item.timestamp.minute }}
+                    </p>
+                    {% if item.active %}
+                        <a href="{{ url_for('change_item_state', item_id=item.item_id, state='inactive') }}" class="card-link">Mark
+                            Inactive</a>
+                    {% else %}
+                        <a href="{{ url_for('change_item_state', item_id=item.item_id, state='active') }}" class="card-link">Mark
+                            Active</a>
+                    {% endif %}
+
+                    <a href="{{ url_for('delete_item', item_id=item.item_id) }}" class="card-link">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <link rel="stylesheet" href="static/css/autocomplete.css" media="screen">
+    <script src="static/js/autocomplete.js"></script>
 {% endblock %}

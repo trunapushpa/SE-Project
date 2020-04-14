@@ -42,9 +42,10 @@ def load_user(user_id):
 
 @app.route("/")
 @app.route("/home")
-def index():
+def index(location=''):
     if current_user.is_authenticated:
-        return render_template("feed.html", index=True)
+        items = Items.query.filter_by(location="Himalaya").all()
+        return render_template("feed.html", index=True, items=items)
     return render_template("landing_page.html", index=True)
 
 
@@ -57,7 +58,6 @@ def switch_theme(theme):
 @app.route("/myitems")
 @login_required
 def myitems():
-    # TODO write query here
     items = Items.query.filter_by(user_id=current_user.user_id).all()
     return render_template("my_items.html", items=items)
 
