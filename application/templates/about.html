@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="display-4">Team</h1>
+    <hr class="my-4"/>
+    <div class="row">
+        {% for member in team %}
+            <div class="col-sm-4 mx-auto p-3 pb-5">
+                <h2> {{ member['name'] }} </h2>
+                    <a href="{{ member['github'] }}" target="_blank"><i class="fa-fw fab fa-github-square text-secondary" title="Github" style="font-size:36px;"></i></a>
+                    <a href="{{ member['linkedin'] }}" target="_blank"><i class="fa-fw fab fa-linkedin text-secondary" title="LinkedIn" style="font-size:36px;"></i></a>
+                    <a href="mailto:{{ member['email'] }}" target="_blank"><i class="fa-fw fas fa-envelope-square text-secondary" title="Email" style="font-size:36px;"></i></a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
