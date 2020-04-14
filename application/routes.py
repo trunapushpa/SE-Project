@@ -5,6 +5,7 @@ from datetime import datetime
 import cv2
 from PIL import Image
 from flask_login import login_user, login_required, logout_user, current_user
+from sqlalchemy import create_engine
 from werkzeug.utils import secure_filename
 from application import app, db, login_manager
 from flask import render_template, redirect, url_for, session, request, jsonify
@@ -13,6 +14,9 @@ from application.dbModels.items import Items
 from application.forms.RegisterForm import RegisterForm
 from application.forms.LoginForm import LoginForm
 from flask.helpers import flash
+
+from application.forms.UpdateNameForm import UpdateNameForm
+from application.forms.UpdatePwdForm import UpdatePwdForm
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -51,7 +55,9 @@ def switch_theme(theme):
 @app.route("/myitems")
 @login_required
 def myitems():
-    return render_template("<h1>No items yet</h1>")
+    # TODO write query here
+    items = Items.query.order_by(Items.user_id).all()
+    return render_template("my_items.html", items=items)
 
 
 # TODO: Fix twice image upload
@@ -105,10 +111,50 @@ def uploaditem():
                            time=datetime.now().strftime("%H:%M"))
 
 
-@app.route("/myprofile")
+@app.route("/userprofile")
 @login_required
 def myprofile():
-    return render_template("<h1>No yet implemented</h1>")
+    update_name_form = UpdateNameForm()
+    update_pwd_form = UpdatePwdForm()
+    return render_template("user_profile.html",
+                           update_name_form=update_name_form,
+                           update_pwd_form=update_pwd_form,
+                           myprofile=True)
+
+
+@app.route('/updatename', methods=["POST"])
+@login_required
+def update_name():
+    form = UpdateNameForm()
+    if form.validate_on_submit():
+        user = current_user
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        db.session.add(user)
+        db.session.commit()
+        flash('Name changed!', 'success')
+        return redirect(url_for('myprofile'))
+    flash('First or Last Name cannot be empty and should not be longer than 50 characters', 'danger')
+    return redirect(url_for('myprofile'))
+
+
+@app.route('/password_change', methods=["POST"])
+@login_required
+def user_password_change():
+    form = UpdatePwdForm()
+    if form.validate_on_submit():
+        user = current_user
+        user.pwd = form.password.data
+        user.set_password(user.pwd)
+        db.session.add(user)
+        db.session.commit()
+        flash('Password has been updated!', 'success')
+        return redirect(url_for('myprofile'))
+    if not form.password.data == form.confirmPassword.data:
+        flash('Password and Confirmed Password does not match!!', 'danger')
+    else:
+        flash('Password should at least 5 characters long', 'danger')
+    return redirect(url_for('myprofile'))
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -126,6 +172,7 @@ def register():
         newUser.set_password(password)
         db.session.add(newUser)
         db.session.commit()
+        login_user(newUser)
         flash(f"Congratulations {firstname}, You are successfully registered.", "success")
         return redirect(url_for('login'))
     return render_template("register.html", register=True, form=form)
