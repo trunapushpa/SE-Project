@@ -6,6 +6,7 @@ import cv2
 from PIL import Image
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy import create_engine
+from sqlalchemy.orm.attributes import flag_modified
 from werkzeug.utils import secure_filename
 from application import app, db, login_manager
 from flask import render_template, redirect, url_for, session, request, jsonify
@@ -56,13 +57,16 @@ def switch_theme(theme):
 @login_required
 def myitems():
     # TODO write query here
-    items = Items.query.order_by(Items.user_id).all()
+    items = Items.query.filter_by(user_id=current_user.user_id).all()
     return render_template("my_items.html", items=items)
 
 
 @app.route("/delete_item/<item_id>", methods=['GET'])
 @login_required
 def delete_item(item_id):
+    item = Items.query.filter_by(item_id=item_id).first()
+    db.session.delete(item)
+    db.session.commit()
     flash('Successfully Deleted', 'success')
     return redirect(url_for('myitems'))
 
@@ -70,6 +74,12 @@ def delete_item(item_id):
 @app.route("/change_item_state/<item_id>/<state>", methods=['GET'])
 @login_required
 def change_item_state(item_id, state):
+    item = Items.query.filter_by(item_id=item_id).first()
+    if state == 'inactive':
+        item.active = False
+    else:
+        item.active = True
+    db.session.commit()
     flash(f"Item marked {state}", 'success')
     return redirect(url_for('myitems'))
 
