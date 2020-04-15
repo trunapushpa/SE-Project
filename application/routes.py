@@ -59,7 +59,7 @@ def switch_theme(theme):
 def myitems():
     # TODO write query here
     items = Items.query.filter_by(user_id=current_user.user_id).all()
-    return render_template("my_items.html", items=items)
+    return render_template("my_items.html", items=items, myitems=True)
 
 
 @app.route("/delete_item/<item_id>", methods=['GET'])

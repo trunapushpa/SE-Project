@@ -18,15 +18,25 @@
                     <h4 class="card-text">{{ item.caption }}</h4>
                     <p></p>
                     <p class="card-text">
-                        Location: {{ item.location }}<br/>
-                        Date: {{ item.timestamp.day }}-{{ item.timestamp.month }}-{{ item.timestamp.year }}<br/>
-                        Time: {{ item.timestamp.hour }}:{{ item.timestamp.minute }}
-                    </p>
+                    <div class="row">
+                        <div class="col">
+                            <h5>Location</h5>{{ item.location }}
+                        </div>
+                        <div class="col">
+                            <h5>Date</h5>{{ item.timestamp.day }}-{{ item.timestamp.month }}-{{ item.timestamp.year }}
+                        </div>
+                        <div class="col">
+                            <h5>Time</h5>{{ item.timestamp.hour }}:{{ item.timestamp.minute }}
+                        </div>
+                    </div>
+                    <p></p>
                     {% if item.active %}
-                        <a href="{{ url_for('change_item_state', item_id=item.item_id, state='inactive') }}" class="card-link">Mark
+                        <a href="{{ url_for('change_item_state', item_id=item.item_id, state='inactive') }}"
+                           class="card-link">Mark
                             Inactive</a>
                     {% else %}
-                        <a href="{{ url_for('change_item_state', item_id=item.item_id, state='active') }}" class="card-link">Mark
+                        <a href="{{ url_for('change_item_state', item_id=item.item_id, state='active') }}"
+                           class="card-link">Mark
                             Active</a>
                     {% endif %}
 
