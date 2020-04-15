@@ -24,3 +24,7 @@
         transform: rotate(360deg);
     }
 }
+
+.small-card {
+    max-width: 50rem;
+}

@@ -16,24 +16,18 @@ from application.dbModels.items import Items
 from application.forms.RegisterForm import RegisterForm
 from application.forms.LoginForm import LoginForm
 from flask.helpers import flash
-
+from application.forms.SearchForm import SearchForm
 from application.forms.UpdateNameForm import UpdateNameForm
 from application.forms.UpdatePwdForm import UpdatePwdForm
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+LOCATIONS = ['Himalaya', 'Vindhya', 'KCIS', 'NBH', 'OBH', 'JC', 'Bakul', 'BBC', 'Football Ground']
+TYPES = ['lost', 'found', 'buy', 'sell']
 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-# def feature_vector(file):
-#     src = cv2.imread(file)
-#     target_size = (64, 64)
-#     dst = cv2.resize(src, target_size)
-#
-#     dst = dst.reshape(target_size.shape[0] * target_size.shape[1])
-#     return dst
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -41,11 +35,41 @@ def load_user(user_id):
 
 
 @app.route("/")
-@app.route("/home")
-def index(location=''):
+@app.route("/home", methods=['GET', 'POST'])
+def index():
     if current_user.is_authenticated:
+        if request.method == 'GET':
+            form = SearchForm()
+            items = Items.query.all()
+            return render_template("feed.html", index=True, items=items, form=form, locations=LOCATIONS, types=TYPES,
+                                   date=datetime.now().strftime("%Y-%m-%d"))
+        form = SearchForm()
+        search_type = form.search_type.data
+        if search_type == 'simple':
+            query = form.query.data
+            print(query)
+        elif search_type == 'adv':
+            query = form.query.data
+            types = form.types.data
+            locations = form.locations.data
+            start_date = form.start_date.data
+            end_date = form.end_date.data
+            print(search_type, query, types, locations, start_date.day, start_date.month, start_date.year)
+        elif search_type == 'simple-img':
+            # don't know if the following code works
+            img = form.img.data
+            print(img)
+        elif search_type == 'adv-img':
+            img = form.img.data
+            types = form.types.data
+            locations = form.locations.data
+            start_date = form.start_date.data
+            end_date = form.end_date.data
+            print(search_type, types, img)
         items = Items.query.filter_by(location="Himalaya").all()
-        return render_template("feed.html", index=True, items=items)
+        new_search_form = SearchForm()
+        return render_template("feed.html", index=True, items=items, form=new_search_form, locations=LOCATIONS,
+                               types=TYPES, date=datetime.now().strftime("%Y-%m-%d"))
     return render_template("landing_page.html", index=True)
 
 
