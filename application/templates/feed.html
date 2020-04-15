@@ -203,7 +203,7 @@
 
     <div class="card-columns">
         {% for item in items %}
-            <div class="card mb-3">
+            <div class="card mb-3 item-card">
                 <img class="card-img-top" src="{{ 'static/images/UploadedImages' + '/' + item.image_path }}"
                      alt="Card image cap">
                 <div class="card-body">
@@ -213,16 +213,42 @@
                     <h4 class="card-text">{{ item.caption }}</h4>
                     <p></p>
                     <p class="card-text">
-                        Location: {{ item.location }}<br/>
-                        Date: {{ item.timestamp.day }}/{{ item.timestamp.month }}-{{ item.timestamp.year }}<br/>
-                        Time: {{ item.timestamp.hour }}:{{ item.timestamp.minute }}
-                    </p>
+                    <div class="row">
+                        <div class="col">
+                            <h5>Location</h5>{{ item.location }}
+                        </div>
+                        <div class="col">
+                            <h5>Date</h5>{{ item.timestamp.day }}-{{ item.timestamp.month }}-{{ item.timestamp.year }}
+                        </div>
+                        <div class="col">
+                            <h5>Time</h5>{{ item.timestamp.hour }}:{{ item.timestamp.minute }}
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 
     <script src="static/js/feed.js"></script>
+    <script>
+        {% if session['theme'] == 'darkly' %}
+            $('.item-card').hover(
+                function () {
+                    $(this).toggleClass('shadow');
+                    $(this).toggleClass('bg-secondary');
+                    $(this).toggleClass('border-secondary');
+                }
+            );
+        {% else %}
+            $('.item-card').hover(
+                function () {
+                    $(this).toggleClass('shadow');
+                    $(this).toggleClass('bg-light');
+                    $(this).toggleClass('border-secondary');
+                }
+            );
+        {% endif %}
+    </script>
 
     {#    <link rel="stylesheet" href="static/css/autocomplete.css" media="screen">#}
     {#    <script src="static/js/autocomplete.js"></script>#}
