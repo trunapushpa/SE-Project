@@ -32,3 +32,11 @@
 .item-card:hover {
     cursor: pointer;
 }
+
+.custom-nav-item > a {
+    color: var(--secondary);
+}
+
+.custom-nav-item > a.active {
+    color: var(--primary);
+}
