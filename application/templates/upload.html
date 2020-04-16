@@ -51,11 +51,9 @@
                         <label class="input-group-text" for="location">Location</label>
                     </div>
                     <select class="custom-select" id="location" name="location" required>
-                        <option value="unknown" selected="">Unknown</option>
-                        <option value="Himalaya">Himalaya</option>
-                        <option value="JC">JC</option>
-                        <option value="Vindhya">Vindhya</option>
-                        <option value="NBH">NBH</option>
+                        {% for location in locations %}
+                            <option value="{{ location }}" {% if loop.last %} selected="" {% endif %}>{{ location }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>

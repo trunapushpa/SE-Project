@@ -40,10 +40,10 @@ $('input[type="file"]').change(function (e) {
         success: function (data, textStatus, jQxhr) {
             $('#item-description')[0].innerText = data.description;
             stopLoading();
-            $('#messages').append("<div class=\"alert alert-dismissable alert-success\">\n" +
-                "                        <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n" +
-                "                        Successfully received image description" +
-                "                    </div>");
+            // $('#messages').append("<div class=\"alert alert-dismissable alert-success\">\n" +
+            //     "                        <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n" +
+            //     "                        Successfully received image description" +
+            //     "                    </div>");
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log(jqXhr);

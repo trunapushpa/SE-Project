@@ -21,7 +21,7 @@ from application.forms.UpdateNameForm import UpdateNameForm
 from application.forms.UpdatePwdForm import UpdatePwdForm
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-LOCATIONS = ['Himalaya', 'Vindhya', 'KCIS', 'NBH', 'OBH', 'JC', 'Bakul', 'BBC', 'Football Ground']
+LOCATIONS = ['Himalaya', 'Vindhya', 'KCIS', 'NBH', 'OBH', 'JC', 'Bakul', 'BBC', 'Football Ground', 'Unknown']
 TYPES = ['lost', 'found', 'buy', 'sell']
 
 
@@ -40,6 +40,7 @@ def index():
     if current_user.is_authenticated:
         if request.method == 'GET':
             form = SearchForm()
+            # TODO: Not include the items by current_user.user_id
             items = Items.query.all()
             return render_template("feed.html", index=True, items=items, form=form, locations=LOCATIONS, types=TYPES,
                                    date=datetime.now().strftime("%Y-%m-%d"))
@@ -71,6 +72,15 @@ def index():
         return render_template("feed.html", index=True, items=items, form=new_search_form, locations=LOCATIONS,
                                types=TYPES, date=datetime.now().strftime("%Y-%m-%d"))
     return render_template("landing_page.html", index=True)
+
+
+# TODO: Write actual query for this
+@app.route("/get_contact_info", methods=['POST'])
+@login_required
+def get_contact_info():
+    user_id = request.form['user_id']
+    print(user_id)
+    return jsonify(name="Jatin Barber", email="jatin@barber.com")
 
 
 @app.route("/switch_theme/<theme>", methods=['POST'])
@@ -157,7 +167,7 @@ def uploaditem():
             flash('Allowed file types are png, jpg, jpeg', 'warning')
             return redirect(request.url), 415
     return render_template("upload.html", date=datetime.now().strftime("%Y-%m-%d"),
-                           time=datetime.now().strftime("%H:%M"))
+                           time=datetime.now().strftime("%H:%M"), locations=LOCATIONS)
 
 
 @app.route("/userprofile")
@@ -258,7 +268,6 @@ def logout():
 def about():
     file = open('team.json', 'r')
     team = json.load(file)
-    print(team)
     return render_template('about.html', about=True, team=team)
 
 

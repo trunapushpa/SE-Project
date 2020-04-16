@@ -28,3 +28,7 @@
 .small-card {
     max-width: 50rem;
 }
+
+.item-card:hover {
+    cursor: pointer;
+}
