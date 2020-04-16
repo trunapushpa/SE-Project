@@ -40,8 +40,7 @@ def index():
     if current_user.is_authenticated:
         if request.method == 'GET':
             form = SearchForm()
-            # TODO: Not include the items by current_user.user_id
-            items = Items.query.all()
+            items = Items.query.filter(Items.user_id!=current_user.user_id).all()
             return render_template("feed.html", index=True, items=items, form=form, locations=LOCATIONS, types=TYPES,
                                    date=datetime.now().strftime("%Y-%m-%d"))
         form = SearchForm()
@@ -74,13 +73,15 @@ def index():
     return render_template("landing_page.html", index=True)
 
 
-# TODO: Write actual query for this
 @app.route("/get_contact_info", methods=['POST'])
 @login_required
 def get_contact_info():
     user_id = request.form['user_id']
     print(user_id)
-    return jsonify(name="Jatin Barber", email="jatin@barber.com")
+    user = Users.query.filter_by(user_id=user_id).first()
+    name = user.first_name + " " + user.last_name
+    email = user.email
+    return jsonify(name=name, email=email)
 
 
 @app.route("/switch_theme/<theme>", methods=['POST'])
