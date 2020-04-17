@@ -40,6 +40,13 @@ class ProjectTests(unittest.TestCase):
     #     self.assertIn(b'Some catchy content!', response.data)
     #     self.assertIn(b'Some more catchy content goes here', response.data)
 
+    def login(self, email, password):
+        return self.app.post(
+            '/login',
+            data=dict(email=email, password=password),
+            follow_redirects=True
+        )
+
     def register(self, first_name, last_name, email, password, confirmPassword):
         return self.app.post(
             '/register',
@@ -48,31 +55,27 @@ class ProjectTests(unittest.TestCase):
             follow_redirects=True
         )
 
-    def test_user_registration_form_displays(self):
-        response = self.app.get('/register')
+    def test_user_login_form_displays(self):
+        response = self.app.get('/login')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Sign up', response.data)
+        self.assertIn(b'Login', response.data)
 
-    def test_valid_user_registration(self):
+    def test_valid_user_login(self):
         self.app.get('/register', follow_redirects=True)
         random_email = ''.join(random.choices(string.ascii_lowercase, k=8)) + '@' + ''.join(
             random.choices(string.ascii_lowercase, k=8)) + '.com'
-        response = self.register('admin', 'admin', random_email, '12345678', '12345678')
-        self.assertIn(b'You are successfully registered', response.data)
+        self.register('admin', 'admin', random_email, '12345678', '12345678')
+        response = self.login(random_email, '12345678')
+        self.assertIn(b'Successfully logged in !!', response.data)
 
-    def test_duplicate_email_user_registration_error(self):
+    def test_wrong_email_user_login_error(self):
         self.register('admin', 'admin', 'c@c.com', '12345678', '12345678')
-        response = self.register('admin', 'admin', 'c@c.com', '12345678', '12345678')
-        self.assertIn(b'Email already registered, Please user another!!', response.data)
+        response = self.login('c@c.com', '12345678',)
+        self.assertIn(b'Invalid Username or password. Please try again !!', response.data)
 
     def test_user_profile_without_logging_in(self):
         response = self.app.get('/userprofile')
         self.assertEqual(response.status_code, 500)
-
-    def test_password_and_confirmPassword_error(self):
-        response = self.register('admin', 'admin', 'c@c.com', '12345678', '123456789')
-        self.assertIn(b'Password and Confirmed Password does not match!!', response.data)
-
 
 if __name__ == "__main__":
     unittest.main()
