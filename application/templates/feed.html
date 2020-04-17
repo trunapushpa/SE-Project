@@ -11,16 +11,7 @@
             }
         </style>
     {% endif %}
-    <div class="small-card mx-auto mb-3 mt-0">
-        <ul class="nav">
-            <li class="nav-item custom-nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#search">Text Search</a>
-            </li>
-            <li class="nav-item custom-nav-item">
-                <a class="nav-link" data-toggle="tab" href="#img-search">Image Search</a>
-            </li>
-        </ul>
-
+    <div class="small-card mx-auto mb-4 pb-2 pt-1">
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade show active" id="search">
                 <div id="normal-search">
@@ -36,9 +27,19 @@
                             </div>
                         </div>
                     </form>
-                    <div class="text-right">
-                        <button id="show-adv-search" class="btn btn-link"><i class="fas fa-angle-down"
-                                                                             style="font-size: 24px"></i></button>
+                    <div class="row pl-3 pr-3 pr-sm-1">
+                        <ul class="nav col-10">
+                            <li class="nav-item custom-nav-item">
+                                <a class="nav-link active" id="t-1" data-toggle="tab" href="#search">Text Search</a>
+                            </li>
+                            <li class="nav-item custom-nav-item">
+                                <a class="nav-link" id="i-1" data-toggle="tab" href="#img-search">Image Search</a>
+                            </li>
+                        </ul>
+                        <div class="col-2 text-right">
+                            <button id="show-adv-search" class="btn btn-link"><i class="fas fa-angle-down"
+                                                                                 style="font-size: 24px"></i></button>
+                        </div>
                     </div>
                 </div>
                 <div id="advanced-search">
@@ -117,11 +118,22 @@
                             </div>
                         </div>
                     </form>
-                    <div class="text-right">
-                        <button id="show-adv-image-search" class="btn btn-link"><i class="fas fa-angle-down"
-                                                                                   style="font-size: 24px"></i>
-                        </button>
+                    <div class="row pl-3 pr-3 pr-sm-1">
+                        <ul class="nav col-10">
+                            <li class="nav-item custom-nav-item">
+                                <a class="nav-link active" id="t-2" data-toggle="tab" href="#search">Text Search</a>
+                            </li>
+                            <li class="nav-item custom-nav-item">
+                                <a class="nav-link" id="i-2" data-toggle="tab" href="#img-search">Image Search</a>
+                            </li>
+                        </ul>
+                        <div class="text-right col-2">
+                            <button id="show-adv-image-search" class="btn btn-link"><i class="fas fa-angle-down"
+                                                                                       style="font-size: 24px"></i>
+                            </button>
+                        </div>
                     </div>
+
                 </div>
                 <div id="advanced-image-search">
                     <form name="searchForm" action="{{ url_for('index') }}" method="POST" novalidate>
