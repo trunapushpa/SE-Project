@@ -168,7 +168,7 @@ def uploaditem():
             flash('Allowed file types are png, jpg, jpeg', 'warning')
             return redirect(request.url), 415
     return render_template("upload.html", date=datetime.now().strftime("%Y-%m-%d"),
-                           time=datetime.now().strftime("%H:%M"), locations=LOCATIONS)
+                           time=datetime.now().strftime("%H:%M"), locations=LOCATIONS, uploaditem=True)
 
 
 @app.route("/userprofile")
