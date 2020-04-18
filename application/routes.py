@@ -77,7 +77,6 @@ def index():
 @login_required
 def get_contact_info():
     user_id = request.form['user_id']
-    print(user_id)
     user = Users.query.filter_by(user_id=user_id).first()
     name = user.first_name + " " + user.last_name
     email = user.email
@@ -274,4 +273,6 @@ def about():
 
 @app.errorhandler(Exception)
 def all_exception_handler(e):
+    if e.code and isinstance(e.code, int):
+        return render_template("error.html", error=e), e.code
     return render_template("error.html", error=e), 500

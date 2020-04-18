@@ -21,7 +21,7 @@ class ProjectTests(unittest.TestCase):
         self.app = app.test_client()
         db.create_all()
 
-        self.assertEquals(app.debug, False)
+        self.assertEqual(app.debug, False)
 
     # executed after each test
     def tearDown(self):
@@ -71,7 +71,7 @@ class ProjectTests(unittest.TestCase):
 
     def test_password_and_confirmPassword_error(self):
         response = self.register('admin', 'admin', 'c@c.com', '12345678', '123456789')
-        self.assertIn(b'Password and Confirmed Password does not match!!', response.data)
+        self.assertIn(b'Field must be equal to password.', response.data)
 
 
 if __name__ == "__main__":

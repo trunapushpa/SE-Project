@@ -21,7 +21,7 @@ class ProjectTests(unittest.TestCase):
         self.app = app.test_client()
         db.create_all()
 
-        self.assertEquals(app.debug, False)
+        self.assertEqual(app.debug, False)
 
     # executed after each test
     def tearDown(self):
@@ -65,17 +65,20 @@ class ProjectTests(unittest.TestCase):
         random_email = ''.join(random.choices(string.ascii_lowercase, k=8)) + '@' + ''.join(
             random.choices(string.ascii_lowercase, k=8)) + '.com'
         self.register('admin', 'admin', random_email, '12345678', '12345678')
+        self.app.get('/logout', follow_redirects=True)
         response = self.login(random_email, '12345678')
-        self.assertIn(b'Successfully logged in !!', response.data)
+        self.assertIn(b'Successfully logged in', response.data)
 
     def test_wrong_email_user_login_error(self):
         self.register('admin', 'admin', 'c@c.com', '12345678', '12345678')
-        response = self.login('c@c.com', '12345678',)
+        self.app.get('/logout', follow_redirects=True)
+        response = self.login('c@c.com', '123456789')
         self.assertIn(b'Invalid Username or password. Please try again !!', response.data)
 
     def test_user_profile_without_logging_in(self):
         response = self.app.get('/userprofile')
-        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 401)
+
 
 if __name__ == "__main__":
     unittest.main()

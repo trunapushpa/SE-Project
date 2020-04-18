@@ -3,9 +3,9 @@
         {% if not session['theme'] or session['theme'] == 'litera'%} navbar-light bg-light {% else %} navbar-dark bg-primary {% endif %}">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for ('index') }}">
-                <img src="static/images/LF{% if not session['theme'] or session['theme'] == 'litera' %}-dark{% endif %}.svg" class="lf-logo"
+                <img src="static/images/LF{% if not session['theme'] or session['theme'] == 'litera' %}-dark{% endif %}.svg" class="lf-logo d-inline-block align-top"
                      alt="">
-                &nbsp; &nbsp; Lost & Found
+                &nbsp; Lost & Found
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
                     aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
