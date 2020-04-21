@@ -205,8 +205,8 @@
         {% for item in items %}
             <div class="card mb-3 item-card" data-toggle="modal" id="item-card-{{ item.item_id }}"
                  data-target=".modal-{{ item.item_id }}">
-                <img class="card-img-top" src="{{ 'static/images/UploadedImages' + '/' + item.image_path }}"
-                     alt="Card image cap">
+                <img class="card-img-top" src="{{ url_for('static', filename='images/UploadedImages/' + item.image_path) }}"
+                     alt="{{ item.caption }}">
                 <div class="card-body">
                     <h2 class="card-title" style="text-transform:capitalize;">
                         {{ item.type }}
@@ -288,7 +288,7 @@
     {#    </form>#}
 
 
-    <script src="static/js/feed.js"></script>
+    <script src="{{ url_for('static', filename='js/feed.js') }}"></script>
     <script>
         {% if session['theme'] == 'darkly' %}
             $('.item-card').hover(

@@ -1,6 +1,7 @@
+import os
 from flask import Blueprint, redirect, flash, url_for, render_template, request, jsonify
 from flask_login import current_user, login_required
-from application import db
+from application import db, app
 from application.dbModels.items import Items
 from application.routes.indexRoutes import allowed_file
 
@@ -18,6 +19,8 @@ def myitems():
 @login_required
 def delete_item(item_id):
     item = Items.query.filter_by(item_id=item_id).first()
+    if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], item.image_path)):
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image_path))
     db.session.delete(item)
     db.session.commit()
     flash('Successfully Deleted', 'success')
