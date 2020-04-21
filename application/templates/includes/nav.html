@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg fixed-top
         {% if not session['theme'] or session['theme'] == 'litera'%} navbar-light bg-light {% else %} navbar-dark bg-primary {% endif %}">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for ('index') }}">
+            <a class="navbar-brand" href="{{ url_for('home.index') }}">
                 <img src="static/images/LF{% if not session['theme'] or session['theme'] == 'litera' %}-dark{% endif %}.svg" class="lf-logo d-inline-block align-top"
                      alt="">
                 &nbsp; Lost & Found
@@ -16,13 +16,13 @@
                 <ul class="navbar-nav mr-auto">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item {% if uploaditem %} active {% endif %}">
-                            <a href="{{ url_for ('uploaditem') }}" class="nav-link">Upload Item</a>
+                            <a href="{{ url_for('upload_item.uploaditem') }}" class="nav-link">Upload Item</a>
                         </li>
                         <li class="nav-item {% if myitems %} active {% endif %}">
-                            <a href="{{ url_for ('myitems') }}" class="nav-link">My Items</a>
+                            <a href="{{ url_for('my_items.myitems') }}" class="nav-link">My Items</a>
                         </li>
                         <li class="nav-item {% if myprofile %} active {% endif %}">
-                            <a href="{{ url_for ('myprofile') }}" class="nav-link">My Profile</a>
+                            <a href="{{ url_for('my_profile.myprofile') }}" class="nav-link">My Profile</a>
                         </li>
                     {% endif %}
 
@@ -55,14 +55,14 @@
                 <ul class="navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a href="{{ url_for ('logout') }}" class="nav-link">Logout</a>
+                            <a href="{{ url_for('user.logout') }}" class="nav-link">Logout</a>
                         </li>
                     {% else %}
                         <li class="nav-item {% if register %} active {% endif %}">
-                            <a href="{{ url_for ('register') }}" class="nav-link">Sign Up</a>
+                            <a href="{{ url_for('user.register') }}" class="nav-link">Sign Up</a>
                         </li>
                         <li class="nav-item {% if login %} active {% endif %}">
-                            <a href="{{ url_for ('login') }}" class="nav-link">Login</a>
+                            <a href="{{ url_for('user.login') }}" class="nav-link">Login</a>
                         </li>
                     {% endif %}
                 </ul>

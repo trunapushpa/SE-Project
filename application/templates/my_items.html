@@ -34,16 +34,16 @@
                     </div>
                     <p></p>
                     {% if item.active %}
-                        <a href="{{ url_for('change_item_state', item_id=item.item_id, state='inactive') }}"
+                        <a href="{{ url_for('my_items.change_item_state', item_id=item.item_id, state='inactive') }}"
                            class="card-link">Mark
                             Inactive</a>
                     {% else %}
-                        <a href="{{ url_for('change_item_state', item_id=item.item_id, state='active') }}"
+                        <a href="{{ url_for('my_items.change_item_state', item_id=item.item_id, state='active') }}"
                            class="card-link">Mark
                             Active</a>
                     {% endif %}
 
-                    <a href="{{ url_for('delete_item', item_id=item.item_id) }}" class="card-link">Delete</a>
+                    <a href="{{ url_for('my_items.delete_item', item_id=item.item_id) }}" class="card-link">Delete</a>
                 </div>
             </div>
         {% endfor %}

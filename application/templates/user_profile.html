@@ -15,7 +15,7 @@
 
         <div id="tabContents" class="tab-content">
             <div class="tab-pane fade active show" id="update-name">
-                <form name="updateName" class="my-4" action="{{ url_for('update_name') }}" method="POST" novalidate>
+                <form name="updateName" class="my-4" action="{{ url_for('my_profile.update_name') }}" method="POST" novalidate>
                     {{ update_name_form.hidden_tag() }}
                     <div class="form-group">
                         <fieldset disabled="">
@@ -59,7 +59,7 @@
             </div>
 
             <div class="tab-pane fade" id="update-pwd">
-                <form name="updatePwd" class="my-4" action="{{ url_for('user_password_change') }}" method="POST"
+                <form name="updatePwd" class="my-4" action="{{ url_for('my_profile.user_password_change') }}" method="POST"
                       novalidate>
                     {{ update_pwd_form.hidden_tag() }}
 

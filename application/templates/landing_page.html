@@ -6,9 +6,9 @@
         <h1 class="display-3">Some catchy content!</h1>
         <p class="lead">Some more catchy content goes here.......</p>
         <div class="my-5">
-            <a class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary btn-lg" href="{{ url_for('register') }}" role="button">Signup</a>
+            <a class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary btn-lg" href="{{ url_for('user.register') }}" role="button">Signup</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary btn-lg" href="{{ url_for('login') }}" role="button">Login</a>
+            <a class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary btn-lg" href="{{ url_for('user.login') }}" role="button">Login</a>
         </div>
     </div>
 
