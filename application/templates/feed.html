@@ -259,7 +259,7 @@
                             <h6 class="mt-2">Fetching contact info...</h6>
                         </div>
 
-                        <div id="loaded-contact-{{ item.item_id }}" class="my-2 mb-4">
+                        <div id="loaded-contact-{{ item.item_id }}" class="mt-2 mb-4">
                             <h4><strong>Contact Info</strong></h4>
                             <hr class="mb-4 my-3 col-6 mx-0 text-left"/>
                             <h5 id="name-contact-{{ item.item_id }}"></h5>
@@ -268,13 +268,9 @@
                                   action="{{ url_for('send_message', recipient=item.user_id) }}">
                                 {{ send_message_form.hidden_tag() }}
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Message</span>
-                                        </div>
+                                    <label for="message"><h5><strong>Send Message</strong></h5></label>
                                         <textarea id="message" class="form-control" name="message"
-                                                  aria-label="Message"></textarea>
-                                    </div>
+                                                  aria-label="Message" rows="3"></textarea>
                                 </div>
                                 <div class="text-center mt-4">
                                     <button type="submit" name="Submit" value="Submit"
