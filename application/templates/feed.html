@@ -263,6 +263,13 @@
                             <hr class="mb-4 my-3 col-6 mx-0 text-left"/>
                             <h5 id="name-contact-{{ item.item_id }}"></h5>
                             <h5 id="email-contact-{{ item.item_id }}"></h5>
+{#                            <a href="{{ url_for('message_user', user_id=item.user_id) }}">message</a>#}
+                            <p>
+                                <a href="{{ url_for('send_message',
+                                                    recipient=item.user_id) }}">
+                                    {{ _('Send private message') }}
+                                </a>
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -32,6 +32,17 @@
                         <li class="nav-item {% if myprofile %} active {% endif %}">
                             <a href="{{ url_for('my_profile.myprofile') }}" class="nav-link">My Profile</a>
                         </li>
+                        <li class="nav-item {% if messages %} active {% endif %}">
+                            <a href="{{ url_for('messages') }}" class="nav-link">
+                                {{ _('Messages') }}
+                                {% set new_messages = current_user.new_messages() %}
+                                <span id="message_count" class="badge"
+                                      style="visibility: {% if new_messages %}visible
+                                                         {% else %}hidden {% endif %};">
+                                    {{ new_messages }}
+                                </span>
+                            </a>
+                        </li>
                     {% endif %}
 
                     <li class="nav-item dropdown">
