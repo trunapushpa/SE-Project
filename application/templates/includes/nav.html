@@ -32,17 +32,6 @@
                         <li class="nav-item {% if myprofile %} active {% endif %}">
                             <a href="{{ url_for('my_profile.myprofile') }}" class="nav-link">My Profile</a>
                         </li>
-                        <li class="nav-item {% if messages %} active {% endif %}">
-                            <a href="{{ url_for('messages') }}" class="nav-link">
-                                {{ _('Messages') }}
-                                {% set new_messages = current_user.new_messages() %}
-                                <span id="message_count" class="badge"
-                                      style="visibility: {% if new_messages %}visible
-                                                         {% else %}hidden {% endif %};">
-                                    {{ new_messages }}
-                                </span>
-                            </a>
-                        </li>
                     {% endif %}
 
                     <li class="nav-item dropdown">
@@ -73,6 +62,18 @@
                 </ul>
                 <ul class="navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
+                        <li class="nav-item {% if messages %} active {% endif %}">
+                            <a href="{{ url_for('messages') }}" class="nav-link">
+                                {{ _('Messages') }}
+                                {% set new_messages = current_user.new_messages() %}
+                                <sup><span id="message_count"
+                                           class="badge badge-pill badge-{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %}secondary{% endif %}"
+                                           style="visibility: {% if new_messages %}visible
+                                           {% else %}hidden {% endif %};">
+                                    {{ new_messages }}
+                                </span></sup>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ url_for('user.logout') }}" class="nav-link">Logout</a>
                         </li>

@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from flask import render_template, request, jsonify, Blueprint
 from application.dbModels.users import Users
 from application.dbModels.items import Items
+from application.forms.MessageForm import MessageForm
 from application.forms.SearchForm import SearchForm
 
 home = Blueprint('home', __name__)
@@ -22,9 +23,10 @@ def index():
     if current_user.is_authenticated:
         if request.method == 'GET':
             form = SearchForm()
+            new_message_form = MessageForm()
             items = Items.query.filter(Items.user_id != current_user.user_id).all()
             return render_template("feed.html", index=True, items=items, form=form, locations=LOCATIONS, types=TYPES,
-                                   date=datetime.now().strftime("%Y-%m-%d"))
+                                   date=datetime.now().strftime("%Y-%m-%d"), send_message_form=new_message_form)
         form = SearchForm()
         search_type = form.search_type.data
         if search_type == 'simple':
@@ -50,8 +52,10 @@ def index():
             print(search_type, types, img)
         items = Items.query.filter_by(location="Himalaya").all()
         new_search_form = SearchForm()
+        new_message_form = MessageForm()
         return render_template("feed.html", index=True, items=items, form=new_search_form, locations=LOCATIONS,
-                               types=TYPES, date=datetime.now().strftime("%Y-%m-%d"))
+                               types=TYPES, date=datetime.now().strftime("%Y-%m-%d"),
+                               send_message_form=new_message_form)
     return render_template("landing_page.html", index=True)
 
 
@@ -63,5 +67,3 @@ def get_contact_info():
     name = user.first_name + " " + user.last_name
     email = user.email
     return jsonify(name=name, email=email)
-
-

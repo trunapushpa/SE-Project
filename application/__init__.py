@@ -1,7 +1,6 @@
 import os
 from flask import Flask
 from flask_babel import Babel
-from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from config import Config, ProductionConfig, DevelopmentConfig, TestingConfig
 from flask_sqlalchemy import SQLAlchemy
@@ -17,6 +16,5 @@ login_manager = LoginManager()
 db = SQLAlchemy(app)
 login_manager.init_app(app)
 babel = Babel(app)
-bootstrap = Bootstrap(app)
 
 from application import routes

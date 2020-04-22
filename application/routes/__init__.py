@@ -2,9 +2,6 @@ import json
 from flask import render_template, session, redirect, request, url_for, flash, current_app
 from flask_login import login_required, current_user
 from datetime import datetime
-
-from flask_security.utils import _
-
 from application import app, db, login_manager
 from application.dbModels.message import Messages
 from application.dbModels.users import Users
@@ -42,12 +39,12 @@ def about():
 
 @app.errorhandler(Exception)
 def all_exception_handler(e):
-    if e.code and isinstance(e.code, int):
+    if hasattr(e, 'code') and e.code and isinstance(e.code, int):
         return render_template("error.html", error=e), e.code
     return render_template("error.html", error=e), 500
 
 
-@app.route('/send_message/<recipient>', methods=['GET', 'POST'])
+@app.route('/send_message/<recipient>', methods=['POST'])
 @login_required
 def send_message(recipient):
     user = Users.query.filter_by(user_id=recipient).first_or_404()
@@ -57,10 +54,8 @@ def send_message(recipient):
                        body=form.message.data)
         db.session.add(msg)
         db.session.commit()
-        flash(_('Your message has been sent.'))
-        return redirect(url_for('home.index'))
-    return render_template('send_message.html', title=_('Send Message'),
-                           form=form, recipient=recipient)
+        flash('Your message has been sent.', 'success')
+    return redirect(url_for('home.index'))
 
 
 @app.route('/messages')
