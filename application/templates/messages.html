@@ -1,3 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+
 <h1>{{ _('Messages') }}</h1>
     {% for msg in messages %}
         <div>
@@ -18,3 +21,5 @@
             </li>
         </ul>
     </nav>
+
+{% endblock %}
