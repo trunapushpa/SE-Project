@@ -1,6 +1,9 @@
 from flask_login import UserMixin
 from application import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
+from application.dbModels.message import Messages
 
 
 class Users(db.Model, UserMixin):
@@ -11,6 +14,13 @@ class Users(db.Model, UserMixin):
     last_name = db.Column(db.String(50), nullable = False)
     email = db.Column(db.String(50), unique = True , nullable = False)
     pwd = db.Column(db.String(), nullable = False)
+    messages_sent = db.relationship('Messages',
+                                    foreign_keys='Messages.sender_id',
+                                    backref='author', lazy='dynamic')
+    messages_received = db.relationship('Messages',
+                                        foreign_keys='Messages.recipient_id',
+                                        backref='recipient', lazy='dynamic')
+    last_message_read_time = db.Column(db.DateTime)
 
     def __init__(self, first_name, last_name, email):
         self.first_name = first_name,
@@ -41,3 +51,8 @@ class Users(db.Model, UserMixin):
 
     def is_anonymous(self):
         return False
+
+    def new_messages(self):
+        last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
+        return Messages.query.filter_by(recipient=self).filter(
+            Messages.timestamp > last_read_time).count()
