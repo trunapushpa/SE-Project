@@ -3,9 +3,14 @@
 
 <h1>{{ _('Messages') }}</h1>
     {% for msg in messages %}
-        <div>
-            {{ msg }}
-        </div>
+        <table>
+            <tr valign="top">
+{#                <td><h3>{{ Users.query.filter_by(user_id=msg.sender_id).first_or_404() }}</h3></td>#}
+                <td><h3>{{ msg.sender_id }}</h3></td>
+                <td><h3>{{ msg.body }}</h3></td>
+{#                <td><a href="{{ url_for('send_message', recipient=msg.sender_id) }}">Reply</a></td>#}
+            </tr>
+        </table>
     {% endfor %}
     <nav aria-label="...">
         <ul class="pager">

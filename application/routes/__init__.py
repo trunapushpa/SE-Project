@@ -47,10 +47,10 @@ def all_exception_handler(e):
 @app.route('/send_message/<recipient>', methods=['POST'])
 @login_required
 def send_message(recipient):
-    user = Users.query.filter_by(user_id=recipient).first_or_404()
+    msgReciever = Users.query.filter_by(user_id=recipient).first_or_404()
     form = MessageForm()
     if form.validate_on_submit():
-        msg = Messages(author=current_user, recipient=user,
+        msg = Messages(author=current_user, recipient=msgReciever,
                        body=form.message.data)
         db.session.add(msg)
         db.session.commit()
