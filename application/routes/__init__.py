@@ -7,12 +7,16 @@ from application.routes.myItemsRoutes import my_items
 from application.routes.myProfileRoutes import my_profile
 from application.routes.uploadItemRoutes import upload_item
 from application.routes.userRoutes import user
+from application.routes.allItemsRoutes import all_items
+from application.routes.allUsersRoutes import all_users
 
 app.register_blueprint(home, prefix_url='')
 app.register_blueprint(user, prefix_url='')
 app.register_blueprint(my_items, prefix_url='')
 app.register_blueprint(my_profile, prefix_url='')
 app.register_blueprint(upload_item, prefix_url='')
+app.register_blueprint(all_items, prefix_url='')
+app.register_blueprint(all_users, prefix_url='')
 
 
 @login_manager.user_loader
