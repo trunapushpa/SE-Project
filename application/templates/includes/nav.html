@@ -34,6 +34,18 @@
                         </li>
                     {% endif %}
 
+                    {% if current_user.isadmin == true %}
+
+                    <li class="nav-item dropdown {% if admin %} active {% endif %}">
+                        <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ url_for('all_items.allitems') }}">Manage All Items</a>
+                            <a class="dropdown-item" href="{{ url_for('all_users.allusers') }}">Manage All Users</a>
+                        </div>
+                    </li>
+                        
+                    {% endif %}
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Themes <span
                                 class="caret"></span></a>

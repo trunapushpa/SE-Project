@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="page-header">
+        <h2 class="display-4">All Items</h2>
+    </div>
+    <br/>
+
+    {% if items|length == 0 %}
+        <h4>No items yet.</h4>
+    {% endif %}
+
+    <div class="card-columns">
+        {% for item in items %}
+            <div class="card mb-3">
+                <img class="card-img-top" src="{{ 'static/images/UploadedImages' + '/' + item.image_path }}"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title" style="text-transform:capitalize;">
+                        {{ item.type }}
+                    </h2>
+                    <h4 class="card-text">{{ item.caption }}</h4>
+                    <p></p>
+                    <p class="card-text">
+                    <div class="row">
+                        <div class="col">
+                            <h5>User</h5>{{ item.first_name }}
+                        </div>
+                        <div class="col">
+                            <h5>Location</h5>{{ item.location }}
+                        </div>
+                        <div class="col">
+                            <h5>Type</h5>{{ item.type }}
+                        </div>
+                        <div class="col">
+                            <h5>Date</h5>{{ item.timestamp.day }}-{{ item.timestamp.month }}-{{ item.timestamp.year }}
+                        </div>
+                        <div class="col">
+                            <h5>Time</h5>{{ item.timestamp.hour }}:{{ item.timestamp.minute }}
+                        </div>
+                    </div>
+                    <p></p>
+                    {% if item.active %}
+                        <a href="{{ url_for('all_items.change_anyitem_state', item_id=item.item_id, state='inactive') }}"
+                           class="btn btn-warning">Mark
+                            Inactive</a>
+                    {% else %}
+                        <a href="{{ url_for('all_items.change_anyitem_state', item_id=item.item_id, state='active') }}"
+                           class="btn btn-primary">Mark
+                            Active</a>
+                    {% endif %}
+
+                    <a href="{{ url_for('all_items.delete_anyitem', item_id=item.item_id) }}" class="btn btn-dark">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        {% if session['theme'] == 'darkly' %}
+            $('.card').hover(
+                function () {
+                    $(this).toggleClass('shadow');
+                    $(this).toggleClass('bg-secondary');
+                    $(this).toggleClass('border-secondary');
+                }
+            );
+        {% else %}
+            $('.card').hover(
+                function () {
+                    $(this).toggleClass('shadow');
+                    $(this).toggleClass('bg-light');
+                    $(this).toggleClass('border-secondary');
+                }
+            );
+        {% endif %}
+    </script>
+
+{% endblock %}
