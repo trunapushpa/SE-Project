@@ -63,7 +63,7 @@
                 <ul class="navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item {% if messages %} active {% endif %}">
-                            <a href="{{ url_for('messages') }}" class="nav-link">
+                            <a href="{{ url_for('message.messages') }}" class="nav-link">
                                 {{ _('Messages') }}
                                 {% set new_messages = current_user.new_messages() %}
                                 <sup><span id="message_count"
@@ -101,7 +101,7 @@
                 var currentdate = new Date();
                 var since = currentdate.getTime();
                 setInterval(function () {
-                    $.ajax('{{ url_for('notifications') }}?since=' + since).done(
+                    $.ajax('{{ url_for('message.notifications') }}?since=' + since).done(
                         function (notifications) {
                             for (var i = 0; i < notifications.length; i++) {
                                 if (notifications[i].name === 'unread_message_count')
