@@ -5,15 +5,16 @@
 
     <ul class="nav nav-tabs mt-4">
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#recvd-msgs">Received</a>
+            <a class="nav-link {% if not sent %} active {% endif %}"
+               href="{{ url_for('message.messages') }}">Received</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#sent-msgs">Sent</a>
+            <a class="nav-link {% if sent %} active {% endif %}" href="{{ url_for('message.sent_messages') }}">Sent</a>
         </li>
     </ul>
 
     <div id="tabContents" class="tab-content mt-4">
-        <div class="tab-pane fade active show" id="recvd-msgs">
+        <div class="tab-pane fade active show">
             <div>
                 <div class="list-group list-group-flush">
                     {% for msg in messages %}
@@ -26,16 +27,25 @@
                                 </div>
                                 <div class="col ml-lg-2">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h3>{{ msg.author.first_name + ' ' + msg.author.last_name }}</h3>
+                                        {% if not sent %}
+                                            <h3>{{ msg.author.first_name + ' ' + msg.author.last_name }}</h3>
+                                        {% else %}
+                                            <h3>{{ msg.recipient.first_name + ' ' + msg.recipient.last_name }}</h3>
+                                        {% endif %}
                                         <p class="text-muted mx-2">{{ msg.timestamp.day }}/{{ msg.timestamp.month }}/{{ msg.timestamp.year }}
                                             &nbsp; {{ msg.timestamp.hour }}:{{ msg.timestamp.minute }}</p>
                                     </div>
-                                    <h5>Item: <span style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }} </h5>
+                                    <h5>Item: <span
+                                            style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }}
+                                        @ {{ msg.item.location }}</h5>
                                     <h5 class="mt-4 mr-lg-5">{{ msg.body }}</h5>
-                                    <div class="text-right">
-                                        <button class="btn btn-success my-1 mx-2" data-toggle="modal" data-target=".modal-{{ msg.id }}">Reply</button>
-                                        <button class="btn btn-danger my-1 mx-2">Delete</button>
-                                    </div>
+                                    {% if not sent %}
+                                        <div class="text-right">
+                                            <button class="btn btn-primary my-1 mx-2" data-toggle="modal"
+                                                    data-target=".modal-{{ msg.id }}">Reply
+                                            </button>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -48,89 +58,87 @@
                     <li class="page-item {% if not prev_url %} disabled{% endif %}">
                         <a class="page-link" href="{{ prev_url or '#' }}" tabindex="-1">Previous</a>
                     </li>
-                    {#            TODO: Fix pagination indexes and links#}
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active"><span class="page-link">2<span class="sr-only">(current)</span></span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+
+                    {% for i in range(3, 0, -1) %}
+                        {% if cur_page - i > 0 %}
+                            <li class="page-item"><a class="page-link"
+                                    {% if not sent %}
+                                                     href="{{ url_for('message.messages', page=(cur_page-i)) }}"
+                                    {% else %}
+                                                     href="{{ url_for('message.sent_messages', page=(cur_page-i)) }}"
+                                    {% endif %}
+                            >{{ cur_page - i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <li class="page-item active"><span class="page-link">{{ cur_page }}<span
+                            class="sr-only">(current)</span></span></li>
+
+                    {% for i in range(1, 4) %}
+                        {% if cur_page + i <= total_pages %}
+                            <li class="page-item"><a class="page-link"
+                                    {% if not sent %}
+                                                     href="{{ url_for('message.messages', page=(cur_page+i)) }}"
+                                    {% else %}
+                                                     href="{{ url_for('message.sent_messages', page=(cur_page+i)) }}"
+                                    {% endif %}
+                            >{{ cur_page + i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
 
                     <li class="page-item {% if not next_url %} disabled{% endif %}">
                         <a class="page-link" href="{{ next_url or '#' }}">Next</a>
                     </li>
                 </ul>
             </nav>
-            {% for msg in messages %}
-                <div class="modal fade modal-{{ msg.id }}" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header mx-3">
-                                <h3 class="modal-title" style="text-transform:capitalize;">
-                                    <strong>Send Message</strong>
-                                </h3>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body mx-3 my-2">
-                                <h5><strong>Name:&nbsp;</strong>{{ msg.author.first_name + ' ' + msg.author.last_name }}</h5>
-                                <h5><strong>Email:&nbsp;&nbsp;</strong><a href='mailto:{{ msg.author.email }}'>{{ msg.author.email }}</a></h5>
-                                <h5><strong>Item:&nbsp;&nbsp;&nbsp;</strong><span style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }} </h5>
+            {% if not sent %}
+                {% for msg in messages %}
+                    <div class="modal fade modal-{{ msg.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header mx-3">
+                                    <h3 class="modal-title" style="text-transform:capitalize;">
+                                        <strong>Send Message</strong>
+                                    </h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body mx-3 my-2">
+                                    <h5>
+                                        <strong>Name:&nbsp;</strong>{{ msg.author.first_name + ' ' + msg.author.last_name }}
+                                    </h5>
+                                    <h5><strong>Email:&nbsp;&nbsp;</strong><a
+                                            href='mailto:{{ msg.author.email }}'>{{ msg.author.email }}</a></h5>
+                                    <h5><strong>Item:&nbsp;&nbsp;&nbsp;</strong><span
+                                            style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }}
+                                        @ {{ msg.item.location }} </h5>
 
-                                <form name="Message" method="post" class="form mt-4"
-                                      action="{{ url_for('message.send_message', recipient=msg.author.user_id) }}">
-                                    {{ send_message_form.hidden_tag() }}
-                                    <input type="number" name="item_id" value="{{ msg.item_id }}" hidden>
-                                    <div class="form-group">
-                                        <label for="message"><h5><strong>Message</strong></h5></label>
-                                        <textarea id="message" class="form-control" name="message"
-                                                  aria-label="Message" rows="3"></textarea>
-                                    </div>
-                                    <div class="text-center mt-4">
-                                        <button type="submit" name="Submit" value="Submit"
-                                                class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary">
-                                            Send Private Message
-                                        </button>
-                                    </div>
-                                </form>
+                                    <form name="Message" method="post" class="form mt-4"
+                                          action="{{ url_for('message.send_message', recipient=msg.author.user_id) }}">
+                                        {{ send_message_form.hidden_tag() }}
+                                        <input type="number" name="item_id" value="{{ msg.item_id }}" hidden>
+                                        <div class="form-group">
+                                            <label for="message"><h5><strong>Message</strong></h5></label>
+                                            <textarea id="message" class="form-control" name="message"
+                                                      aria-label="Message" rows="3"></textarea>
+                                        </div>
+                                        <div class="text-center mt-4">
+                                            <button type="submit" name="Submit" value="Submit"
+                                                    class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary">
+                                                Send Private Message
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                </div>
-            {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
     </div>
-    {#    TODO: Sent Messages#}
-    <div class="tab-pane fade" id="sent-msgs">
-        <h5 class="card-title">Special title treatment 2</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    </div>
-    </div>
-    {#        <table>#}
-    {#            <tr valign="top">#}
-    {#                <td><h3>{{ Users.query.filter_by(user_id=msg.sender_id).first_or_404() }}</h3></td>#}
-    {#                <td><h3>{{ msg.sender_id }}</h3></td>#}
-    {#                <td><h3></h3></td>#}
-    {#                <td><h3></h3></td>#}
-    {#                <td><h3></h3></td>#}
-    {#                <td><a href="{{ url_for('send_message', recipient=msg.sender_id) }}">Reply</a></td>#}
-    {#            </tr>#}
-    {#        </table>#}
-    {#        {% endfor %}#}
-    {#    </div>#}
-
-    {#    <nav aria-label="...">#}
-    {#        <ul class="pager">#}
-    {#            <li class="previous{% if not prev_url %} disabled{% endif %}">#}
-    {#                <a href="{{ prev_url or '#' }}">#}
-    {#                    <span aria-hidden="true">&larr;</span> {{ _('Newer messages') }}#}
-    {#                </a>#}
-    {#            </li>#}
-    {#            <li class="next{% if not next_url %} disabled{% endif %}">#}
-    {#                <a href="{{ next_url or '#' }}">#}
-    {#                    {{ _('Older messages') }} <span aria-hidden="true">&rarr;</span>#}
-    {#                </a>#}
-    {#            </li>#}
-    {#        </ul>#}
-    {#    </nav>#}
 
 {% endblock %}

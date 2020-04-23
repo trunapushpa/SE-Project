@@ -8,6 +8,7 @@ from application.dbModels.users import Users
 from application.forms.MessageForm import MessageForm
 
 message = Blueprint('message', __name__)
+MESSAGES_PER_PAGE = 5
 
 
 @message.route('/send_message/<recipient>', methods=['POST'])
@@ -24,6 +25,20 @@ def send_message(recipient):
     return redirect(request.referrer)
 
 
+def return_msgs_with_pages(page, sent=False):
+    msgs = current_user.messages_received.order_by(
+        Messages.timestamp.desc()).paginate(
+        page, MESSAGES_PER_PAGE, False) if not sent else current_user.messages_sent.order_by(
+        Messages.timestamp.desc()).paginate(
+        page, MESSAGES_PER_PAGE, False)
+    next_url = url_for('message.messages', page=msgs.next_num) \
+        if msgs.has_next else None
+    prev_url = url_for('message.messages', page=msgs.prev_num) \
+        if msgs.has_prev else None
+    return render_template('messages.html', messages=msgs.items, cur_page=page, total_pages=msgs.pages,
+                           next_url=next_url, prev_url=prev_url, send_message_form=MessageForm(), sent=sent)
+
+
 @message.route('/messages')
 @login_required
 def messages():
@@ -31,22 +46,21 @@ def messages():
     current_user.add_notification('unread_message_count', 0)
     db.session.commit()
     page = request.args.get('page', 1, type=int)
-    msgs = current_user.messages_received.order_by(
-        Messages.timestamp.desc()).paginate(
-            page, 3, False)
-    next_url = url_for('message.messages', page=msgs.next_num) \
-        if msgs.has_next else None
-    prev_url = url_for('message.messages', page=msgs.prev_num) \
-        if msgs.has_prev else None
-    return render_template('messages.html', messages=msgs.items,
-                           next_url=next_url, prev_url=prev_url, send_message_form=MessageForm())
+    return return_msgs_with_pages(page)
+
+
+@message.route('/sent_messages')
+@login_required
+def sent_messages():
+    page = request.args.get('page', 1, type=int)
+    return return_msgs_with_pages(page, sent=True)
 
 
 @message.route('/notifications')
 @login_required
 def notifications():
     since = request.args.get('since', 0.0, type=float)
-    since = datetime.fromtimestamp(since/1000)
+    since = datetime.fromtimestamp(since / 1000)
     notifications = current_user.notifications.filter(
         Notification.timestamp > since).order_by(Notification.timestamp.asc())
     return jsonify([{

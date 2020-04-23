@@ -11,11 +11,11 @@ from application.dbModels.notification import Notification
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'
 
-    user_id = db.Column(db.Integer, primary_key = True )
-    first_name = db.Column(db.String(50), nullable = False)
-    last_name = db.Column(db.String(50), nullable = False)
-    email = db.Column(db.String(50), unique = True , nullable = False)
-    pwd = db.Column(db.String(), nullable = False)
+    user_id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    pwd = db.Column(db.String(), nullable=False)
     messages_sent = db.relationship('Messages',
                                     foreign_keys='Messages.sender_id',
                                     backref='author', lazy='dynamic')
