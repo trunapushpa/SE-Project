@@ -1,0 +1,144 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <h1 class="mb-4 pb-2">{{ _('Messages') }}</h1>
+
+    <ul class="nav nav-tabs mt-4">
+        <li class="nav-item">
+            <a class="nav-link {% if not sent %} active {% endif %}"
+               href="{{ url_for('message.messages') }}">Received</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if sent %} active {% endif %}" href="{{ url_for('message.sent_messages') }}">Sent</a>
+        </li>
+    </ul>
+
+    <div id="tabContents" class="tab-content mt-4">
+        <div class="tab-pane fade active show">
+            <div>
+                <div class="list-group list-group-flush">
+                    {% for msg in messages %}
+                        <div class="list-group-item flex-column align-items-start py-4">
+                            <div class="row">
+                                <div class="col-3 col-lg-2">
+                                    <img class="img-fluid rounded"
+                                         src="{{ url_for('static', filename='images/UploadedImages/' + msg.item.image_path) }}"
+                                         alt="snake">
+                                </div>
+                                <div class="col ml-lg-2">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        {% if not sent %}
+                                            <h3>{{ msg.author.first_name + ' ' + msg.author.last_name }}</h3>
+                                        {% else %}
+                                            <h3>{{ msg.recipient.first_name + ' ' + msg.recipient.last_name }}</h3>
+                                        {% endif %}
+                                        <p class="text-muted mx-2">{{ msg.timestamp.day }}/{{ msg.timestamp.month }}/{{ msg.timestamp.year }}
+                                            &nbsp; {{ msg.timestamp.hour }}:{{ msg.timestamp.minute }}</p>
+                                    </div>
+                                    <h5>Item: <span
+                                            style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }}
+                                        @ {{ msg.item.location }}</h5>
+                                    <h5 class="mt-4 mr-lg-5">{{ msg.body }}</h5>
+                                    {% if not sent %}
+                                        <div class="text-right">
+                                            <button class="btn btn-primary my-1 mx-2" data-toggle="modal"
+                                                    data-target=".modal-{{ msg.id }}">Reply
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {% if not prev_url %} disabled{% endif %}">
+                        <a class="page-link" href="{{ prev_url or '#' }}" tabindex="-1">Previous</a>
+                    </li>
+
+                    {% for i in range(3, 0, -1) %}
+                        {% if cur_page - i > 0 %}
+                            <li class="page-item"><a class="page-link"
+                                    {% if not sent %}
+                                                     href="{{ url_for('message.messages', page=(cur_page-i)) }}"
+                                    {% else %}
+                                                     href="{{ url_for('message.sent_messages', page=(cur_page-i)) }}"
+                                    {% endif %}
+                            >{{ cur_page - i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <li class="page-item active"><span class="page-link">{{ cur_page }}<span
+                            class="sr-only">(current)</span></span></li>
+
+                    {% for i in range(1, 4) %}
+                        {% if cur_page + i <= total_pages %}
+                            <li class="page-item"><a class="page-link"
+                                    {% if not sent %}
+                                                     href="{{ url_for('message.messages', page=(cur_page+i)) }}"
+                                    {% else %}
+                                                     href="{{ url_for('message.sent_messages', page=(cur_page+i)) }}"
+                                    {% endif %}
+                            >{{ cur_page + i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <li class="page-item {% if not next_url %} disabled{% endif %}">
+                        <a class="page-link" href="{{ next_url or '#' }}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+            {% if not sent %}
+                {% for msg in messages %}
+                    <div class="modal fade modal-{{ msg.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header mx-3">
+                                    <h3 class="modal-title" style="text-transform:capitalize;">
+                                        <strong>Send Message</strong>
+                                    </h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body mx-3 my-2">
+                                    <h5>
+                                        <strong>Name:&nbsp;</strong>{{ msg.author.first_name + ' ' + msg.author.last_name }}
+                                    </h5>
+                                    <h5><strong>Email:&nbsp;&nbsp;</strong><a
+                                            href='mailto:{{ msg.author.email }}'>{{ msg.author.email }}</a></h5>
+                                    <h5><strong>Item:&nbsp;&nbsp;&nbsp;</strong><span
+                                            style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }}
+                                        @ {{ msg.item.location }} </h5>
+
+                                    <form name="Message" method="post" class="form mt-4"
+                                          action="{{ url_for('message.send_message', recipient=msg.author.user_id) }}">
+                                        {{ send_message_form.hidden_tag() }}
+                                        <input type="number" name="item_id" value="{{ msg.item_id }}" hidden>
+                                        <div class="form-group">
+                                            <label for="message"><h5><strong>Message</strong></h5></label>
+                                            <textarea id="message" class="form-control" name="message"
+                                                      aria-label="Message" rows="3"></textarea>
+                                        </div>
+                                        <div class="text-center mt-4">
+                                            <button type="submit" name="Submit" value="Submit"
+                                                    class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary">
+                                                Send Private Message
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+    </div>
+
+{% endblock %}
