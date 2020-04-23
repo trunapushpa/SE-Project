@@ -81,8 +81,8 @@ def messages():
 @app.route('/notifications')
 @login_required
 def notifications():
-    since = request.args.get('since', datetime.now(), type=datetime)
-    print(since)
+    since = request.args.get('since', 0.0, type=float)
+    since = datetime.fromtimestamp(since/1000)
     notifications = current_user.notifications.filter(
         Notification.timestamp > since).order_by(Notification.timestamp.asc())
     return jsonify([{

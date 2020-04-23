@@ -2,16 +2,33 @@
 {% block content %}
 
 <h1>{{ _('Messages') }}</h1>
+
+    <div class="list-group mt-4">
+
     {% for msg in messages %}
-        <table>
-            <tr valign="top">
+
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-4">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ msg.author.first_name + ' ' + msg.author.last_name }} ({{ msg.author.email }})</h5>
+                    <small class="text-muted">{{ msg.timestamp.day }}/{{ msg.timestamp.month }}/{{ msg.timestamp.year }} &nbsp; {{ msg.timestamp.hour }}:{{ msg.timestamp.minute }}</small>
+                </div>
+                <p class="mb-1">{{ msg.body }}</p>
+                <small class="text-muted">Tap to reply</small>
+            </a>
+
+
+{#        <table>#}
+{#            <tr valign="top">#}
 {#                <td><h3>{{ Users.query.filter_by(user_id=msg.sender_id).first_or_404() }}</h3></td>#}
-                <td><h3>{{ msg.sender_id }}</h3></td>
-                <td><h3>{{ msg.body }}</h3></td>
+{#                <td><h3>{{ msg.sender_id }}</h3></td>#}
+{#                <td><h3></h3></td>#}
+{#                <td><h3></h3></td>#}
+{#                <td><h3></h3></td>#}
 {#                <td><a href="{{ url_for('send_message', recipient=msg.sender_id) }}">Reply</a></td>#}
-            </tr>
-        </table>
+{#            </tr>#}
+{#        </table>#}
     {% endfor %}
+    </div>
     <nav aria-label="...">
         <ul class="pager">
             <li class="previous{% if not prev_url %} disabled{% endif %}">
