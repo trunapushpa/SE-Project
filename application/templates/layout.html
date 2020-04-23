@@ -60,5 +60,25 @@
     {% endblock %}
 </div>
 </body>
+<script>
+    {% if current_user.is_authenticated %}
+        $(function() {
+            var currentdate = new Date();
+            var since = currentdate.getDate() + ' ' + currentdate.getTime();
+            setInterval(function() {
+                $.ajax('{{ url_for('notifications') }}?since=' + since).done(
+                    function(notifications) {
+                        console.log(since);
+                        for (var i = 0; i < notifications.length; i++) {
+                            if (notifications[i].name === 'unread_message_count')
+                                set_message_count(notifications[i].data);
+                            since = notifications[i].timestamp;
+                        }
+                    }
+                );
+            }, 10000);
+        });
+    {% endif %}
+</script>
 
 </html>

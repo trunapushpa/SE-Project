@@ -2,8 +2,10 @@ from flask_login import UserMixin
 from application import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import json
 
 from application.dbModels.message import Messages
+from application.dbModels.notification import Notification
 
 
 class Users(db.Model, UserMixin):
@@ -21,6 +23,8 @@ class Users(db.Model, UserMixin):
                                         foreign_keys='Messages.recipient_id',
                                         backref='recipient', lazy='dynamic')
     last_message_read_time = db.Column(db.DateTime)
+    notifications = db.relationship('Notification', backref='user',
+                                    lazy='dynamic')
 
     def __init__(self, first_name, last_name, email):
         self.first_name = first_name,
@@ -56,3 +60,11 @@ class Users(db.Model, UserMixin):
         last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
         return Messages.query.filter_by(recipient=self).filter(
             Messages.timestamp > last_read_time).count()
+
+    def add_notification(self, name, data):
+        self.notifications.filter_by(name=name).delete()
+        n = Notification(name=name, payload_json=json.dumps(data), user=self)
+        print(n.name)
+        print(n.timestamp)
+        db.session.add(n)
+        return n
