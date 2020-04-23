@@ -20,9 +20,8 @@
                         <div class="list-group-item flex-column align-items-start py-4">
                             <div class="row">
                                 <div class="col-3 col-lg-2">
-                                    {#                                TODO: Item Image#}
                                     <img class="img-fluid rounded"
-                                         src="/static/images/UploadedImages/f46730d4-b0a5-4c79-8d8f-58689f034b46.png"
+                                         src="{{ url_for('static', filename='images/UploadedImages/' + msg.item.image_path) }}"
                                          alt="snake">
                                 </div>
                                 <div class="col ml-lg-2">
@@ -31,8 +30,7 @@
                                         <p class="text-muted mx-2">{{ msg.timestamp.day }}/{{ msg.timestamp.month }}/{{ msg.timestamp.year }}
                                             &nbsp; {{ msg.timestamp.hour }}:{{ msg.timestamp.minute }}</p>
                                     </div>
-                                    {#TODO: Item details#}
-                                    <h5>Item: Lost snek</h5>
+                                    <h5>Item: <span style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }} </h5>
                                     <h5 class="mt-4 mr-lg-5">{{ msg.body }}</h5>
                                     <div class="text-right">
                                         <button class="btn btn-success my-1 mx-2" data-toggle="modal" data-target=".modal-{{ msg.id }}">Reply</button>
@@ -76,12 +74,12 @@
                             <div class="modal-body mx-3 my-2">
                                 <h5><strong>Name:&nbsp;</strong>{{ msg.author.first_name + ' ' + msg.author.last_name }}</h5>
                                 <h5><strong>Email:&nbsp;&nbsp;</strong><a href='mailto:{{ msg.author.email }}'>{{ msg.author.email }}</a></h5>
-{#                                TODO: FIx item#}
-                                <h5><strong>Item:&nbsp;&nbsp;&nbsp;</strong>Lost snek</h5>
+                                <h5><strong>Item:&nbsp;&nbsp;&nbsp;</strong><span style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }} </h5>
 
                                 <form name="Message" method="post" class="form mt-4"
                                       action="{{ url_for('message.send_message', recipient=msg.author.user_id) }}">
                                     {{ send_message_form.hidden_tag() }}
+                                    <input type="number" name="item_id" value="{{ msg.item_id }}" hidden>
                                     <div class="form-group">
                                         <label for="message"><h5><strong>Message</strong></h5></label>
                                         <textarea id="message" class="form-control" name="message"

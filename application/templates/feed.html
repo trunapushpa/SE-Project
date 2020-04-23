@@ -267,10 +267,11 @@
                             <form name="Message" method="post" class="form mt-4"
                                   action="{{ url_for('message.send_message', recipient=item.user_id) }}">
                                 {{ send_message_form.hidden_tag() }}
+                                <input type="number" name="item_id" value="{{ item.item_id }}" hidden>
                                 <div class="form-group">
                                     <label for="message"><h5><strong>Send Message</strong></h5></label>
-                                        <textarea id="message" class="form-control" name="message"
-                                                  aria-label="Message" rows="3"></textarea>
+                                    <textarea id="message" class="form-control" name="message"
+                                              aria-label="Message" rows="3"></textarea>
                                 </div>
                                 <div class="text-center mt-4">
                                     <button type="submit" name="Submit" value="Submit"

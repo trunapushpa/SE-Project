@@ -16,8 +16,7 @@ def send_message(recipient):
     msg_receiver = Users.query.filter_by(user_id=recipient).first_or_404()
     form = MessageForm()
     if form.validate_on_submit():
-        msg = Messages(author=current_user, recipient=msg_receiver,
-                       body=form.message.data)
+        msg = Messages(author=current_user, recipient=msg_receiver, body=form.message.data, item_id=form.item_id.data)
         msg_receiver.add_notification('unread_message_count', msg_receiver.new_messages())
         db.session.add(msg)
         db.session.commit()
