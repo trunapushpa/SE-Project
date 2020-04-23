@@ -65,7 +65,5 @@ class Users(db.Model, UserMixin):
     def add_notification(self, name, data):
         self.notifications.filter_by(name=name).delete()
         n = Notification(name=name, payload_json=json.dumps(data), user=self)
-        print(n.name)
-        print(n.timestamp)
         db.session.add(n)
         return n
