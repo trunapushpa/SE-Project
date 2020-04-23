@@ -57,7 +57,7 @@ def send_message(recipient):
         db.session.add(msg)
         db.session.commit()
         flash('Your message has been sent.', 'success')
-    return redirect(url_for('home.index'))
+    return redirect(request.referrer)
 
 
 @app.route('/messages')
@@ -75,7 +75,7 @@ def messages():
     prev_url = url_for('messages', page=msgs.prev_num) \
         if msgs.has_prev else None
     return render_template('messages.html', messages=msgs.items,
-                           next_url=next_url, prev_url=prev_url)
+                           next_url=next_url, prev_url=prev_url, send_message_form=MessageForm())
 
 
 @app.route('/notifications')
