@@ -67,7 +67,7 @@ class ProjectTests(unittest.TestCase):
 
     def test_user_profile_without_logging_in(self):
         response = self.app.get('/userprofile')
-        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 401)
 
     def test_password_and_confirmPassword_error(self):
         response = self.register('admin', 'admin', 'c@c.com', '12345678', '123456789')

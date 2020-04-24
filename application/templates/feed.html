@@ -205,7 +205,8 @@
         {% for item in items %}
             <div class="card mb-3 item-card" data-toggle="modal" id="item-card-{{ item.item_id }}"
                  data-target=".modal-{{ item.item_id }}">
-                <img class="card-img-top" src="{{ url_for('static', filename='images/UploadedImages/' + item.image_path) }}"
+                <img class="card-img-top"
+                     src="{{ url_for('static', filename='images/UploadedImages/' + item.image_path) }}"
                      alt="{{ item.caption }}">
                 <div class="card-body">
                     <h2 class="card-title" style="text-transform:capitalize;">
@@ -255,14 +256,30 @@
                             <div class="spinner-grow">
                                 <span class="sr-only">Loading...</span>
                             </div>
-                            <h6 class="mt-2">Getting contact info...</h6>
+                            <h6 class="mt-2">Fetching contact info...</h6>
                         </div>
 
-                        <div id="loaded-contact-{{ item.item_id }}" class="my-2 mb-5">
+                        <div id="loaded-contact-{{ item.item_id }}" class="mt-2 mb-4">
                             <h4><strong>Contact Info</strong></h4>
                             <hr class="mb-4 my-3 col-6 mx-0 text-left"/>
                             <h5 id="name-contact-{{ item.item_id }}"></h5>
                             <h5 id="email-contact-{{ item.item_id }}"></h5>
+                            <form name="Message" method="post" class="form mt-4"
+                                  action="{{ url_for('message.send_message', recipient=item.user_id) }}">
+                                {{ send_message_form.hidden_tag() }}
+                                <input type="number" name="item_id" value="{{ item.item_id }}" hidden>
+                                <div class="form-group">
+                                    <label for="message"><h5><strong>Send Message</strong></h5></label>
+                                    <textarea id="message" class="form-control" name="message"
+                                              aria-label="Message" rows="3"></textarea>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <button type="submit" name="Submit" value="Submit"
+                                            class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary">
+                                        Send Private Message
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

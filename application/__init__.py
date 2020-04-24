@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_babel import Babel
 from flask_login import LoginManager
 from config import Config, ProductionConfig, DevelopmentConfig, TestingConfig
 from flask_sqlalchemy import SQLAlchemy
@@ -14,5 +15,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 login_manager = LoginManager()
 db = SQLAlchemy(app)
 login_manager.init_app(app)
+babel = Babel(app)
 
 from application import routes
