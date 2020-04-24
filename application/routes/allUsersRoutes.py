@@ -6,14 +6,20 @@ from application.forms.UpdatePwdForm import UpdatePwdForm
 
 all_users = Blueprint('all_users', __name__)
 
+
 @all_users.route('/allusers', methods=['POST', 'GET'])
 @login_required
 def allusers():
     if current_user.isadmin:
         update_pwd_form = UpdatePwdForm()
         # Logged in user should not be able to edit his/her account
+<<<<<<< HEAD
         users = Users.query.filter(Users.user_id != current_user.user_id).order_by(Users.user_id).all()
         return render_template("allusers.html", users = users, update_pwd_form = update_pwd_form)
+=======
+        users = Users.query.filter(Users.user_id != current_user.user_id).order_by(Users.user_id.asc()).all()
+        return render_template("allusers.html", users = users)
+>>>>>>> 188561a8868d8699ecd6a25ccebdf9e761aba017
     else:
         flash('Access denied to requested page', 'danger')
         return redirect(url_for('home.index'))

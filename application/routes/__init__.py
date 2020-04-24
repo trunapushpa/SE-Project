@@ -1,6 +1,6 @@
 import json
 from flask import render_template, session, redirect, request
-from application import app, db, login_manager
+from application import app, login_manager
 from application.dbModels.users import Users
 from application.routes.indexRoutes import home
 from application.routes.messageRoutes import message
@@ -19,6 +19,7 @@ app.register_blueprint(upload_item, prefix_url='')
 app.register_blueprint(message, prefix_url='')
 app.register_blueprint(all_items, prefix_url='')
 app.register_blueprint(all_users, prefix_url='')
+
 
 @login_manager.user_loader
 def load_user(user_id):
