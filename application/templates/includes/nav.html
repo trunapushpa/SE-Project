@@ -29,21 +29,19 @@
                         <li class="nav-item {% if myitems %} active {% endif %}">
                             <a href="{{ url_for('my_items.myitems') }}" class="nav-link">My Items</a>
                         </li>
-                        <li class="nav-item {% if myprofile %} active {% endif %}">
-                            <a href="{{ url_for('my_profile.myprofile') }}" class="nav-link">My Profile</a>
-                        </li>
                     {% endif %}
 
                     {% if current_user.isadmin == true %}
 
-                    <li class="nav-item dropdown {% if admin %} active {% endif %}">
-                        <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ url_for('all_items.allitems') }}">Manage All Items</a>
-                            <a class="dropdown-item" href="{{ url_for('all_users.allusers') }}">Manage All Users</a>
-                        </div>
-                    </li>
-                        
+                        <li class="nav-item dropdown {% if admin %} active {% endif %}">
+                            <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">Admin</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ url_for('all_items.allitems') }}">Manage All Items</a>
+                                <a class="dropdown-item" href="{{ url_for('all_users.allusers') }}">Manage All Users</a>
+                            </div>
+                        </li>
+
                     {% endif %}
 
                     <li class="nav-item dropdown">
@@ -74,20 +72,33 @@
                 </ul>
                 <ul class="navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item {% if messages %} active {% endif %}">
-                            <a href="{{ url_for('message.messages') }}" class="nav-link">
-                                {{ _('Messages') }}
-                                {% set new_messages = current_user.new_messages() %}
-                                <sup><span id="message_count"
-                                           class="badge badge-pill badge-{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %}secondary{% endif %}"
-                                           style="visibility: {% if new_messages %}visible
-                                           {% else %}hidden {% endif %};">
+                        <li class="nav-item {% if messages %} active {% endif %} mr-3" data-toggle="tooltip"
+                            data-placement="bottom" title="Messages">
+                            <a href="{{ url_for('message.messages') }}" class="nav-link" id="msg-nav-link">
+                            {% set new_messages = current_user.new_messages() %}
+                                <i class="fas fa-envelope-open{% if new_messages %}-text{% endif %}"></i>
+                                {% if new_messages %}
+                                    <sup>
+                                    <span id="message_count"
+                                          class="badge badge-pill badge-{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %}secondary{% endif %}"
+                                          style="visibility: {% if new_messages %}visible
+                                          {% else %}hidden {% endif %};">
                                     {{ new_messages }}
-                                </span></sup>
+                                    </span>
+                                    </sup>
+                                {% endif %}
                             </a>
                         </li>
+                        <li class="nav-item {% if myprofile %} active {% endif %} mr-3" data-toggle="tooltip"
+                            data-placement="bottom" title="My Profile">
+                            <a href="{{ url_for('my_profile.myprofile') }}" class="nav-link"><i
+                                    class="fas fa-user-cog"></i></a>
+                        </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('user.logout') }}" class="nav-link">Logout</a>
+                            <a href="{{ url_for('user.logout') }}" class="nav-link" data-toggle="tooltip"
+                               data-placement="bottom" title="Logout">
+                                <i class="fas fa-door-open"></i>
+                            </a>
                         </li>
                     {% else %}
                         <li class="nav-item {% if register %} active {% endif %}">
@@ -101,11 +112,22 @@
             </div>
         </div>
     </nav>
-    <script>
+    <script type='text/javascript'>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+
         // ...
         function set_message_count(n) {
-            $('#message_count').text(n);
-            $('#message_count').css('visibility', n ? 'visible' : 'hidden');
+            if (n > 0) {
+                $('#msg-nav-link').html("<i class='fas fa-envelope-open-text'></i> <sup> <span class='badge badge-pill badge-"
+                    + "{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %} secondary{% endif %}'"
+                    + "style=\"visibility: visible;\">" + n + "</span></sup>");
+            } else {
+                $('#msg-nav-link').html("<i class='fas fa-envelope-open'></i>");
+            }
+            {#$('#message_count').text(n);#}
+            {#$('#message_count').css('visibility', n ? 'visible' : 'hidden');#}
         }
 
         {% if current_user.is_authenticated %}

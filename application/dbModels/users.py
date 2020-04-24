@@ -17,6 +17,7 @@ class Users(db.Model, UserMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     pwd = db.Column(db.String(), nullable=False)
     isadmin = db.Column(db.Boolean)
+    reward = db.Column(db.Integer, default=0)
     messages_sent = db.relationship('Messages',
                                     foreign_keys='Messages.sender_id',
                                     backref='author', lazy='dynamic')
@@ -65,7 +66,5 @@ class Users(db.Model, UserMixin):
     def add_notification(self, name, data):
         self.notifications.filter_by(name=name).delete()
         n = Notification(name=name, payload_json=json.dumps(data), user=self)
-        print(n.name)
-        print(n.timestamp)
         db.session.add(n)
         return n

@@ -1,36 +1,57 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div class="page-header">
-    <h2 class="display-4">All Users</h2>
-</div>
-<br/>
+    <div class="page-header">
+        <h2 class="display-4">All Users</h2>
+    </div>
+    <br/>
 
     {% if users|length == 0 %}
         <h4>No users yet.</h4>
     {% endif %}
 
-    <div class="card-columns">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for user in users %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title" style="text-transform:capitalize;">
-                        {{ user.first_name + " " + user.last_name }}
-                    </h2>
-                    <p></p>
-                    <p class="card-text">
-                    <div class="row">
-                        <div class="col">
-                            <h5>ID</h5>{{ user.user_id }}
-                        </div>
-                        <div class="col">
-                            <h5>Email</h5>{{ user.email }}
-                        </div>
-                    </div>
-                    <p></p>
-                    <a href="#" class="card-link">Delete</a>
-                </div>
-            </div>
+            <tr>
+                <th scope="row">{{ user.user_id }}</th>
+                <td>{{ user.first_name + " " + user.last_name }} {% if user.isadmin %} &nbsp; <span class="badge badge-pill badge-primary">Admin</span> {% endif %}</td>
+                <td>{{ user.email }}</td>
+                <td><a href="#"><i class="fas fa-trash text-danger"></i></a></td>
+            </tr>
         {% endfor %}
-    </div>
+        </tbody>
+    </table>
+
+{#    <div class="card-columns">#}
+{#        {% for user in users %}#}
+{#            <div class="card mb-4">#}
+{#                <div class="card-body">#}
+{#                    <h2 class="card-title" style="text-transform:capitalize;">#}
+{#                        {{ user.first_name + " " + user.last_name }}#}
+{#                    </h2>#}
+{#                    <p></p>#}
+{#                    <p class="card-text">#}
+{#                    <div class="row">#}
+{#                        <div class="col">#}
+{#                            <h5>ID</h5>{{ user.user_id }}#}
+{#                        </div>#}
+{#                        <div class="col">#}
+{#                            <h5>Email</h5>{{ user.email }}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <p></p>#}
+{#                    <a href="#" class="card-link">Delete</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    </div>#}
 
 {% endblock %}
