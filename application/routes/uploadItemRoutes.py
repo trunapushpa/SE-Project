@@ -11,6 +11,8 @@ from application import db, app
 from application.dbModels.items import Items
 from application.routes.indexRoutes import allowed_file, LOCATIONS
 
+from ..ml.cv import extract_feature as image_extract_feature  
+
 upload_item = Blueprint('upload_item', __name__)
 
 
@@ -33,9 +35,10 @@ def uploaditem():
             input_time = request.form['time']
             timestamp = time.mktime(time.strptime(input_date + " " + input_time, "%Y-%m-%d %H:%M"))
             filename = secure_filename(str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower())
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # TODO: Find Feature Vector
-            feature_vector = [1, 2, 3]
+            save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(save_fpath)
+            feature_vector, class_label = image_extract_feature(save_fpath)
+            feature_vector = list([float(x) for x in feature_vector])
             new_item = Items(current_user.user_id, item_type, location, filename, description, timestamp,
                              feature_vector)
             db.session.add(new_item)

@@ -1,6 +1,6 @@
+import os
 import torch
 from torch import nn
-
 
 def _make_divisible(v, divisor, min_value=None):
     """
@@ -161,6 +161,7 @@ def mobilenet_v2(pretrained=False, progress=True, **kwargs):
     """
     model = MobileNetV2(**kwargs)
     if pretrained:
-        state_dict = torch.load('mobilenet_v2-b0353104.pth')
+        cwd = os.getcwd()
+        state_dict = torch.load(os.path.join(cwd, 'application/ml', 'mobilenet_v2-b0353104.pth'))
         model.load_state_dict(state_dict)
     return model
