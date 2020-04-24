@@ -35,7 +35,8 @@
                     </div>
                     <p></p>
                     {% if item.active %}
-                        <a data-toggle="modal" data-target=".modal-mark-inactive-{{ item.item_id }}" href="{{ url_for('my_items.change_item_state', item_id=item.item_id, state='inactive') }}"
+                        <a data-toggle="modal" data-target=".modal-mark-inactive-{{ item.item_id }}" href="#"
+{#                           href="{{ url_for('my_items.change_item_state', item_id=item.item_id, state='inactive') }}"#}
                            class="card-link">Mark Inactive</a>
                     {% else %}
                         <a href="{{ url_for('my_items.change_item_state', item_id=item.item_id, state='active') }}"
@@ -48,9 +49,74 @@
         {% endfor %}
     </div>
 
-
+    {% for item in items %}
+        <div class="modal fade modal-mark-inactive-{{ item.item_id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header mx-3">
+                        <h3 class="modal-title" style="text-transform:capitalize;">
+                            <strong>Mark Inactive</strong>
+                        </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body mx-3 my-2">
+                        <form name="Inactive" method="post" class="form"
+                              action="{{ url_for('my_items.mark_inactive') }}">
+                            {{ mark_inactive_form.hidden_tag() }}
+                            <input type="number" name="item_id" value="{{ item.item_id }}" hidden>
+                            <div class="form-group">
+                                Were you able to find your item?
+                                <div class="row mt-2 ml-sm-3">
+                                    <div class="col-6 col-sm-3 text-center">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline1" name="success"
+                                           class="custom-control-input" value="Yes">
+                                    <label class="custom-control-label" for="customRadioInline1">Yes</label>
+                                </div>
+                                    </div>
+                                    <div class="col-6 col-sm-3 text-center">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="success"
+                                           class="custom-control-input" value="No" checked="">
+                                    <label class="custom-control-label" for="customRadioInline2">No</label>
+                                </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="ifYes" style="display: none">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="email-addon">Email</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Finder's email"
+                                           aria-label="Finder's email"
+                                           aria-describedby="email-addon" name="email">
+                                </div>
+{#                                {{ mark_inactive_form.email(class='form-control') }}#}
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="submit" name="Submit" value="Submit"
+                                        class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary">
+                                    Mark Inactive
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 
     <script>
+        $('input[type=radio][name=success]').change(function () {
+            if (document.getElementById('customRadioInline1').checked) {
+                document.getElementById('ifYes').style.display = 'block';
+            } else {
+                document.getElementById('ifYes').style.display = 'none';
+            }
+        });
         {% if session['theme'] == 'darkly' %}
             $('.card').hover(
                 function () {
