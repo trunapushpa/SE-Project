@@ -92,12 +92,12 @@
                         <li class="nav-item {% if myprofile %} active {% endif %} mr-3" data-toggle="tooltip"
                             data-placement="bottom" title="My Profile">
                             <a href="{{ url_for('my_profile.myprofile') }}" class="nav-link"><i
-                                    class="fas fa-user-cog fa-fw"></i></a>
+                                    class="fas fa-user-cog"></i></a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ url_for('user.logout') }}" class="nav-link" data-toggle="tooltip"
                                data-placement="bottom" title="Logout">
-                                <i class="fas fa-door-open fa-fw"></i>
+                                <i class="fas fa-door-open"></i>
                             </a>
                         </li>
                     {% else %}
