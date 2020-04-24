@@ -72,21 +72,6 @@
                 </ul>
                 <ul class="navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
-<<<<<<< HEAD
-                        {% if current_user.isadmin == true %}
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Create User</a>
-                        </li>
-                        {% endif %}
-                        <li class="nav-item {% if messages %} active {% endif %}">
-                            <a href="{{ url_for('message.messages') }}" class="nav-link">
-                                {{ _('Messages') }}
-                                {% set new_messages = current_user.new_messages() %}
-                                <sup><span id="message_count"
-                                           class="badge badge-pill badge-{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %}secondary{% endif %}"
-                                           style="visibility: {% if new_messages %}visible
-                                           {% else %}hidden {% endif %};">
-=======
                         <li class="nav-item {% if messages %} active {% endif %} mr-3" data-toggle="tooltip"
                             data-placement="bottom" title="Messages">
                             <a href="{{ url_for('message.messages') }}" class="nav-link" id="msg-nav-link">
@@ -98,7 +83,6 @@
                                           class="badge badge-pill badge-{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %}secondary{% endif %}"
                                           style="visibility: {% if new_messages %}visible
                                           {% else %}hidden {% endif %};">
->>>>>>> 188561a8868d8699ecd6a25ccebdf9e761aba017
                                     {{ new_messages }}
                                     </span>
                                     </sup>
