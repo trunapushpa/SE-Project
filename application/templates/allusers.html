@@ -27,7 +27,8 @@
                         </div>
                     </div>
                     <p></p>
-                    <a href="#" class="card-link">Delete</a>
+                    <button id="myBtn" class="btn btn-primary">Change Password</button>
+                    <a href="{{ url_for('all_users.deleteuser', user_id = user.user_id)}}" class="btn btn-dark">Delete</a>
                 </div>
             </div>
         {% endfor %}
