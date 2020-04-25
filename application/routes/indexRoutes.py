@@ -5,6 +5,7 @@ from application.dbModels.users import Users
 from application.dbModels.items import Items
 from application.forms.MessageForm import MessageForm
 from application.forms.SearchForm import SearchForm
+from application.routes.topUsersRoutes import ascRankValues, ascRankColors, ascRanks
 
 home = Blueprint('home', __name__)
 
@@ -66,4 +67,10 @@ def get_contact_info():
     user = Users.query.filter_by(user_id=user_id).first()
     name = user.first_name + " " + user.last_name
     email = user.email
-    return jsonify(name=name, email=email)
+    rank_id = 0
+    for i, rank in enumerate(ascRankValues):
+        if user.reward >= rank:
+            rank_id = i
+    rank_html = "&nbsp;<small><small><span class=\"badge badge-pill badge-" + ascRankColors[rank_id] + "\">" + ascRanks[
+        rank_id] + "</span></small></small>"
+    return jsonify(name=name, email=email, rank=rank_html)

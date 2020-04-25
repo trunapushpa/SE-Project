@@ -335,7 +335,7 @@
                         'user_id': {{item.user_id}}
                     },
                     success: function (data, textStatus, jQxhr) {
-                        $('#name-contact-{{ item.item_id }}')[0].innerHTML = "<strong>Name:&nbsp;</strong>" + data.name;
+                        $('#name-contact-{{ item.item_id }}')[0].innerHTML = "<strong>Name:&nbsp;</strong>" + data.name + data.rank;
                         $('#email-contact-{{ item.item_id }}')[0].innerHTML = "<strong>Email:&nbsp;&nbsp;</strong><a href='mailto:" + data.email + "'>" + data.email + "</a>";
                         $('#loading-contact-{{ item.item_id }}').hide();
                         $('#loaded-contact-{{ item.item_id }}').show();

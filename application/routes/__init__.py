@@ -6,6 +6,7 @@ from application.routes.indexRoutes import home
 from application.routes.messageRoutes import message
 from application.routes.myItemsRoutes import my_items
 from application.routes.myProfileRoutes import my_profile
+from application.routes.topUsersRoutes import top_users
 from application.routes.uploadItemRoutes import upload_item
 from application.routes.userRoutes import user
 from application.routes.allItemsRoutes import all_items
@@ -13,6 +14,7 @@ from application.routes.allUsersRoutes import all_users
 
 app.register_blueprint(home, prefix_url='')
 app.register_blueprint(user, prefix_url='')
+app.register_blueprint(top_users, prefix_url='')
 app.register_blueprint(my_items, prefix_url='')
 app.register_blueprint(my_profile, prefix_url='')
 app.register_blueprint(upload_item, prefix_url='')

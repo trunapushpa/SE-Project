@@ -44,6 +44,9 @@
 
                     {% endif %}
 
+                    <li class="nav-item">
+                        <a class="nav-link {% if top_users %} active {% endif %}" href="{{ url_for('top_users.top_users_page') }}">Top Users</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Themes <span
                                 class="caret"></span></a>

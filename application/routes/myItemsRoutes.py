@@ -6,9 +6,9 @@ from application.dbModels.items import Items
 from application.dbModels.users import Users
 from application.forms.markInactiveForm import MarkInactiveForm
 from application.routes.indexRoutes import allowed_file
+from application.routes.topUsersRoutes import REWARD
 
 my_items = Blueprint('my_items', __name__)
-REWARD = {'lost': [1, 6], 'found': [6, 1], 'buy': [3, 3], 'sell': [3, 3], 'unsuccessful': 1}
 
 
 @my_items.route("/myitems")
