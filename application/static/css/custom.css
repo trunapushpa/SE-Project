@@ -48,3 +48,26 @@
 .adminsub{
     text-align: center;
 }
+
+.admindiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#admincheckbox{
+    width: 25px;
+    margin: 10px;
+}
+
+#createuserbtn{
+    right: 0;
+    position: absolute;    
+    margin-right: 25rem;
+}
+
+.adminuserpage{
+    display: flex;
+    align-items: center;
+}

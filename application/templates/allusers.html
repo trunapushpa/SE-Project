@@ -1,7 +1,88 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div class="page-header">
-    <h2 class="display-4">All Users</h2>
+<div class="row text-center adminuserpage">
+    <div class="page-header">
+        <h2 class="display-4">All Users</h2>
+    </div>
+    <button id="createuserbtn" data-target="#newuserform" data-toggle="modal" class="btn btn-primary display-4">Create User</button>
+    <div class="modal fade" id="newuserform" tabindex="-1" role="dialog"
+                aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold">New User</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ url_for('all_users.newuser') }}" method="POST"
+                            novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="form-group row {% if form.first_name.errors or form.last_name.errors %} has-danger {% endif %}">
+                                <div class="col adminpwd">
+                                    {% if form.first_name.errors %}
+                                        {{ form.first_name(class='form-control is-invalid') }}
+                                    {% else %}
+                                        {{ form.first_name(class='form-control', placeholder="First Name") }}
+                                    {% endif %}
+                                    {% for error in form.first_name.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col adminpwd">
+                                    {% if form.last_name.errors %}
+                                        {{ form.last_name(class='form-control is-invalid') }}
+                                    {% else %}
+                                        {{ form.last_name(class='form-control', placeholder="Last Name") }}
+                                    {% endif %}
+                                    {% for error in form.last_name.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-group {% if form.email.errors %} has-danger {% endif %} adminpwd">
+                                {% if form.email.errors %}
+                                    {{ form.email(class='form-control is-invalid') }}
+                                {% else %}
+                                    {{ form.email(class='form-control', placeholder="Email") }}
+                                {% endif %}
+                                {% for error in form.email.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group {% if form.password.errors %} has-danger {% endif %} adminpwd">
+                                {% if form.password.errors %}
+                                    {{ form.password(class='form-control is-invalid') }}
+                                {% else %}
+                                    {{ form.password(class='form-control', placeholder="Password") }}
+                                {% endif %}
+                                {% for error in form.password.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group {% if form.confirmPassword.errors %} has-danger {% endif %} adminpwd">
+                                {% if form.confirmPassword.errors %}
+                                    {{ form.confirmPassword(class='form-control is-invalid') }}
+                                {% else %}
+                                    {{ form.confirmPassword(class='form-control', placeholder="Confirm Password") }}
+                                {% endif %}
+                                {% for error in form.confirmPassword.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="admindiv">
+                                {{ form.isAdmin(class='form-control', type='checkbox', id="admincheckbox")}}
+                                {{ form.isAdmin.label(id="admincheckboxlabel") }}
+                            </div>
+                            {% if not session['theme'] or session['theme'] == 'litera' %}
+                                {{ form.submit(value='Submit', class='btn btn-outline-primary my-4') }}
+                            {% else %}
+                                {{ form.submit(value='Submit', class='btn btn-primary my-4') }}
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
 </div>
 <br />
 
