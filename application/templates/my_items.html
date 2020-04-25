@@ -67,34 +67,50 @@
                             {{ mark_inactive_form.hidden_tag() }}
                             <input type="number" name="item_id" value="{{ item.item_id }}" hidden>
                             <div class="form-group">
-                                Were you able to find your item?
+                                {% if item.type == 'lost' %}
+                                    Were you able to find your item?
+                                {% elif item.type == 'found' %}
+                                    Were you able to find the owner?
+                                {% elif item.type == 'sell' %}
+                                    Were you able to find a buyer?
+                                {% elif item.type == 'buy' %}
+                                    Were you able to find a seller?
+                                {% endif %}
                                 <div class="row mt-2 ml-sm-3">
                                     <div class="col-6 col-sm-3 text-center">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="customRadioInline1" name="success"
-                                           class="custom-control-input" value="Yes">
-                                    <label class="custom-control-label" for="customRadioInline1">Yes</label>
-                                </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline1-{{ item.item_id }}" name="success"
+                                                   class="custom-control-input class-{{ item.item_id }}" value="Yes">
+                                            <label class="custom-control-label" for="customRadioInline1-{{ item.item_id }}">Yes</label>
+                                        </div>
                                     </div>
                                     <div class="col-6 col-sm-3 text-center">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="customRadioInline2" name="success"
-                                           class="custom-control-input" value="No" checked="">
-                                    <label class="custom-control-label" for="customRadioInline2">No</label>
-                                </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline2-{{ item.item_id }}" name="success"
+                                                   class="custom-control-input class-{{ item.item_id }}" value="No" checked="">
+                                            <label class="custom-control-label" for="customRadioInline2-{{ item.item_id }}">No</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group" id="ifYes" style="display: none">
+                            <div class="form-group" id="ifYes-{{ item.item_id }}" style="display: none">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="email-addon">Email</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Finder's email"
-                                           aria-label="Finder's email"
+                                    {% if item.type == 'lost' %}
+                                        {% set placeholder = "Finder's email" %}
+                                    {% elif item.type == 'found' %}
+                                        {% set placeholder = "Owner's email" %}
+                                    {% elif item.type == 'sell' %}
+                                        {% set placeholder = "Buyer's email" %}
+                                    {% elif item.type == 'buy' %}
+                                        {% set placeholder = "Seller's email" %}
+                                    {% endif %}
+                                    <input type="text" class="form-control" placeholder="{{ placeholder }}"
+                                           aria-label="{{ placeholder }}"
                                            aria-describedby="email-addon" name="email">
                                 </div>
-{#                                {{ mark_inactive_form.email(class='form-control') }}#}
                             </div>
                             <div class="text-center mt-4">
                                 <button type="submit" name="Submit" value="Submit"
@@ -110,13 +126,16 @@
     {% endfor %}
 
     <script>
-        $('input[type=radio][name=success]').change(function () {
-            if (document.getElementById('customRadioInline1').checked) {
-                document.getElementById('ifYes').style.display = 'block';
-            } else {
-                document.getElementById('ifYes').style.display = 'none';
-            }
-        });
+        {% for foo in items %}
+            $('.class-{{ foo.item_id }}').change(function () {
+                if (document.getElementById('customRadioInline1-{{ foo.item_id }}').checked) {
+                    document.getElementById('ifYes-{{ foo.item_id }}').style.display = 'block';
+                } else {
+                    document.getElementById('ifYes-{{ foo.item_id }}').style.display = 'none';
+                }
+            });
+        {% endfor %}
+
         {% if session['theme'] == 'darkly' %}
             $('.card').hover(
                 function () {

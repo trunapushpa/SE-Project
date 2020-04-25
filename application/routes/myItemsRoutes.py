@@ -3,10 +3,12 @@ from flask import Blueprint, redirect, flash, url_for, render_template, request,
 from flask_login import current_user, login_required
 from application import db, app
 from application.dbModels.items import Items
+from application.dbModels.users import Users
 from application.forms.markInactiveForm import MarkInactiveForm
 from application.routes.indexRoutes import allowed_file
 
 my_items = Blueprint('my_items', __name__)
+REWARD = {'lost': [1, 6], 'found': [6, 1], 'buy': [3, 3], 'sell': [3, 3], 'unsuccessful': 1}
 
 
 @my_items.route("/myitems")
@@ -33,7 +35,25 @@ def mark_inactive():
     form = MarkInactiveForm()
     form.success.choices = ['Yes', 'No']
     if form.validate_on_submit():
-        print("form.email.data")
+        item_id = form.item_id.data
+        item = Items.query.filter_by(item_id=item_id).first()
+        if form.success.data == 'Yes':
+            user2 = Users.query.filter_by(email=form.email.data).first()
+            if not user2:
+                flash('No such user found!!', 'danger')
+                return redirect(request.referrer)
+            if user2.email == current_user.email:
+                flash('Nice try ;)', 'warning')
+                return redirect(request.referrer)
+            current_user.reward += REWARD[item.type][0]
+            user2.reward += REWARD[item.type][1]
+        else:
+            current_user.reward += REWARD['unsuccessful']
+        item.active = False
+        db.session.commit()
+        flash('Item marked inactive', 'success')
+    else:
+        flash('Wrong form data', 'danger')
     return redirect(request.referrer)
 
 

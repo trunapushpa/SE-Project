@@ -5,6 +5,6 @@ from wtforms.validators import DataRequired
 
 class MarkInactiveForm(FlaskForm):
     item_id = IntegerField('Item id', validators=[DataRequired()])
-    success = RadioField('Success')
+    success = StringField('Success')
     email = StringField('Email')
     submit = SubmitField('Submit')
