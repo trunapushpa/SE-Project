@@ -110,7 +110,7 @@
                         <div class="input-group mb-2 mt-2">
                             <div class="custom-file">
                                 <input type="file" name="img" class="custom-file-input" id="inp-img">
-                                <label class="custom-file-label" for="inp-img">Choose image</label>
+                                <label class="custom-file-label text-muted" for="inp-img">Choose image</label>
                             </div>
                             <div class="input-group-append">
                                 <button class="btn btn-primary" value="submit" type="submit"><i
@@ -242,15 +242,7 @@
                         </button>
                     </div>
                     <div class="modal-body mx-3">
-                        <h4 class="mt-3"><strong>Item:&nbsp;</strong> {{ item.caption }}</h4>
-
-                        <h5 class="mt-3"><strong>Location:&nbsp;</strong> {{ item.location }}</h5>
-
-                        <h5 class="mt-3 mb-5">
-                            <strong>Date:&nbsp;</strong> {{ item.timestamp.day }}/{{ item.timestamp.month }}/{{ item.timestamp.year }}
-                            &nbsp; &nbsp;
-                            <strong>Time:&nbsp;</strong> {{ item.timestamp.hour }}:{{ item.timestamp.minute }}
-                        </h5>
+                        <h5 class="mt-2 mb-4 pb-1">{{ item.caption }} @ {{ item.location }}</h5>
 
                         <div id="loading-contact-{{ item.item_id }}" class="text-center mx-auto my-5">
                             <div class="spinner-grow">
@@ -259,11 +251,11 @@
                             <h6 class="mt-2">Fetching contact info...</h6>
                         </div>
 
-                        <div id="loaded-contact-{{ item.item_id }}" class="mt-2 mb-4">
+                        <div id="loaded-contact-{{ item.item_id }}" class="mt-3 mb-4">
                             <h4><strong>Contact Info</strong></h4>
-                            <hr class="mb-4 my-3 col-6 mx-0 text-left"/>
+                            <hr class="mb-3 my-3 col-6 mx-0 text-left"/>
                             <h5 id="name-contact-{{ item.item_id }}"></h5>
-                            <h5 id="email-contact-{{ item.item_id }}"></h5>
+                            <h5 id="email-contact-{{ item.item_id }}" class="mt-2"></h5>
                             <form name="Message" method="post" class="form mt-4"
                                   action="{{ url_for('message.send_message', recipient=item.user_id) }}">
                                 {{ send_message_form.hidden_tag() }}

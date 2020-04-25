@@ -40,11 +40,3 @@
 .custom-nav-item > a.active {
     color: var(--primary);
 }
-
-.adminpwd{
-    margin: 10px;
-}
-
-.adminsub{
-    text-align: center;
-}
