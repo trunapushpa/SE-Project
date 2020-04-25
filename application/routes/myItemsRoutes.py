@@ -1,8 +1,11 @@
 import os
-from flask import Blueprint, redirect, flash, url_for, render_template
+from flask import Blueprint, redirect, flash, url_for, render_template, request
 from flask_login import current_user, login_required
 from application import db, app
 from application.dbModels.items import Items
+from application.dbModels.users import Users
+from application.forms.markInactiveForm import MarkInactiveForm
+from application.routes.topUsersRoutes import REWARD
 
 my_items = Blueprint('my_items', __name__)
 
@@ -11,7 +14,7 @@ my_items = Blueprint('my_items', __name__)
 @login_required
 def myitems():
     items = Items.query.filter_by(user_id=current_user.user_id).all()
-    return render_template("my_items.html", items=items, myitems=True)
+    return render_template("my_items.html", items=items, myitems=True, mark_inactive_form=MarkInactiveForm())
 
 
 @my_items.route("/delete_item/<item_id>", methods=['GET'])
@@ -24,6 +27,33 @@ def delete_item(item_id):
     db.session.commit()
     flash('Successfully Deleted', 'success')
     return redirect(url_for('my_items.myitems'))
+
+
+@my_items.route("/mark_inactive", methods=['POST'])
+def mark_inactive():
+    form = MarkInactiveForm()
+    form.success.choices = ['Yes', 'No']
+    if form.validate_on_submit():
+        item_id = form.item_id.data
+        item = Items.query.filter_by(item_id=item_id).first()
+        if form.success.data == 'Yes':
+            user2 = Users.query.filter_by(email=form.email.data).first()
+            if not user2:
+                flash('No such user found!!', 'danger')
+                return redirect(request.referrer)
+            if user2.email == current_user.email:
+                flash('Nice try ;)', 'warning')
+                return redirect(request.referrer)
+            current_user.reward += REWARD[item.type][0]
+            user2.reward += REWARD[item.type][1]
+        else:
+            current_user.reward += REWARD['unsuccessful']
+        item.active = False
+        db.session.commit()
+        flash('Item marked inactive', 'success')
+    else:
+        flash('Wrong form data', 'danger')
+    return redirect(request.referrer)
 
 
 @my_items.route("/change_item_state/<item_id>/<state>", methods=['GET'])
