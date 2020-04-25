@@ -4,7 +4,7 @@
         <div class="page-header "><h1 class="display-4"> Upload an Item </h1>
             <hr class="my-4"/>
         </div>
-        <form name="uploadform" method="post" enctype="multipart/form-data">
+        <form id="uploadform" name="uploadform" method="post" enctype="multipart/form-data">
 
             <div class="form-group">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -44,6 +44,8 @@
                     </div>
                 </div>
             </div>
+            <input id="filename" name="filename" value="" hidden>
+            <input id="f_vector" name="f_vector" value="" hidden>
 
             <div class="form-group">
                 <div class="input-group mb-3">

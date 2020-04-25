@@ -2,6 +2,13 @@ $(document).ready(function () {
     $('#loading-description').hide();
 });
 
+$(function() {
+    $('#uploadform').submit(function() {
+        $('#file', this).prop('disabled', true);
+        return true;
+    });
+});
+
 $('input[type=radio][name=type]').change(function() {
     if(this.value === 'lost' || this.value === 'found') {
         $('#date-time-picker').show();
@@ -39,6 +46,8 @@ $('input[type="file"]').change(function (e) {
         processData: false,
         success: function (data, textStatus, jQxhr) {
             $('#item-description')[0].innerText = data.description;
+            $('#filename')[0].value = data.filename;
+            $('#f_vector')[0].value = data.f_vector;
             stopLoading();
             // $('#messages').append("<div class=\"alert alert-dismissable alert-success\">\n" +
             //     "                        <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n" +
