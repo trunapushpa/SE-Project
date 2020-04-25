@@ -1,5 +1,5 @@
-<li class="nav-item dropdown mr-2">
-    <a class="nav-link dropdown-toggle" data-toggle="dropdown" title="Themes" href="#" id="themes"><i class="far fa-palette"></i><span
+<li class="nav-item dropdown mr-3">
+    <a class="nav-link" data-toggle="dropdown" data-toggle-second="tooltip" data-placement="right" title="Themes" href="#" id="themes"><i class="far fa-palette"></i><span
             class="caret"></span></a>
     <div class="dropdown-menu" aria-labelledby="themes">
         <form id="litera-form" action="/switch_theme/litera" method="post">
@@ -20,3 +20,6 @@
         </form>
     </div>
 </li>
+<script>
+    $('[data-toggle-second="tooltip"]').tooltip();
+</script>
