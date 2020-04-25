@@ -35,7 +35,8 @@
                     </div>
                     <p></p>
                     {% if item.active %}
-                        <a data-toggle="modal" data-target=".modal-mark-inactive-{{ item.item_id }}" href="{{ url_for('my_items.change_item_state', item_id=item.item_id, state='inactive') }}"
+                        <a data-toggle="modal" data-target=".modal-mark-inactive-{{ item.item_id }}" href="#"
+{#                           href="{{ url_for('my_items.change_item_state', item_id=item.item_id, state='inactive') }}"#}
                            class="card-link">Mark Inactive</a>
                     {% else %}
                         <a href="{{ url_for('my_items.change_item_state', item_id=item.item_id, state='active') }}"
@@ -48,9 +49,93 @@
         {% endfor %}
     </div>
 
-
+    {% for item in items %}
+        <div class="modal fade modal-mark-inactive-{{ item.item_id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header mx-3">
+                        <h3 class="modal-title" style="text-transform:capitalize;">
+                            <strong>Mark Inactive</strong>
+                        </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body mx-3 my-2">
+                        <form name="Inactive" method="post" class="form"
+                              action="{{ url_for('my_items.mark_inactive') }}">
+                            {{ mark_inactive_form.hidden_tag() }}
+                            <input type="number" name="item_id" value="{{ item.item_id }}" hidden>
+                            <div class="form-group">
+                                {% if item.type == 'lost' %}
+                                    Were you able to find your item?
+                                {% elif item.type == 'found' %}
+                                    Were you able to find the owner?
+                                {% elif item.type == 'sell' %}
+                                    Were you able to find a buyer?
+                                {% elif item.type == 'buy' %}
+                                    Were you able to find a seller?
+                                {% endif %}
+                                <div class="row mt-2 ml-sm-3">
+                                    <div class="col-6 col-sm-3 text-center">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline1-{{ item.item_id }}" name="success"
+                                                   class="custom-control-input class-{{ item.item_id }}" value="Yes">
+                                            <label class="custom-control-label" for="customRadioInline1-{{ item.item_id }}">Yes</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-sm-3 text-center">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline2-{{ item.item_id }}" name="success"
+                                                   class="custom-control-input class-{{ item.item_id }}" value="No" checked="">
+                                            <label class="custom-control-label" for="customRadioInline2-{{ item.item_id }}">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="ifYes-{{ item.item_id }}" style="display: none">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="email-addon">Email</span>
+                                    </div>
+                                    {% if item.type == 'lost' %}
+                                        {% set placeholder = "Finder's email" %}
+                                    {% elif item.type == 'found' %}
+                                        {% set placeholder = "Owner's email" %}
+                                    {% elif item.type == 'sell' %}
+                                        {% set placeholder = "Buyer's email" %}
+                                    {% elif item.type == 'buy' %}
+                                        {% set placeholder = "Seller's email" %}
+                                    {% endif %}
+                                    <input type="text" class="form-control" placeholder="{{ placeholder }}"
+                                           aria-label="{{ placeholder }}"
+                                           aria-describedby="email-addon" name="email">
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="submit" name="Submit" value="Submit"
+                                        class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary">
+                                    Mark Inactive
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 
     <script>
+        {% for foo in items %}
+            $('.class-{{ foo.item_id }}').change(function () {
+                if (document.getElementById('customRadioInline1-{{ foo.item_id }}').checked) {
+                    document.getElementById('ifYes-{{ foo.item_id }}').style.display = 'block';
+                } else {
+                    document.getElementById('ifYes-{{ foo.item_id }}').style.display = 'none';
+                }
+            });
+        {% endfor %}
+
         {% if session['theme'] == 'darkly' %}
             $('.card').hover(
                 function () {

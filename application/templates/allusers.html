@@ -108,19 +108,20 @@
                     class="badge badge-pill badge-primary">Admin</span> {% endif %}</td>
             <td>{{ user.email }}</td>
             <td><a href="#" data-toggle="modal" data-target="#changepwdform{{user.user_id}}"><i
-                        class="fas fa-key text-success"></i></a></td>
+                        class="fas fa-key text-success ml-lg-5"></i></a></td>
             <td><a href="{{ url_for('all_users.deleteuser', user_id = user.user_id)}}"><i
-                        class="fas fa-trash text-danger"></i></a></td>
+                        class="fas fa-trash text-danger ml-lg-3"></i></a></td>
             <div class="modal fade" id="changepwdform{{user.user_id}}" tabindex="-1" role="dialog"
                 aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header text-center">
-                            <h4 class="modal-title w-100 font-weight-bold">Change Password</h4>
+                        <div class="modal-header text-center mb-4">
+                            <h4 class="modal-title w-100"><strong>Change Password</strong></h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+                    <div class="mx-4 mb-4">
                         <form action="{{ url_for('all_users.changepassword', user_id = user.user_id) }}" method="POST"
                             novalidate>
                             {{ update_pwd_form.hidden_tag() }}
@@ -148,13 +149,15 @@
                                 <div class="invalid-feedback">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                            <div class="adminpwd adminsub">
+                            <div class="text-center my-3">
                                 {{ update_pwd_form.submit(value='Submit', class='btn btn-primary') }}
                             </div>
                         </form>
+                    </div>
                     </div>
                 </div>
             </div>
         </tr>
         {% endfor %}
+    </tbody>
 {% endblock %}

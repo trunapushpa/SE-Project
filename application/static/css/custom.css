@@ -39,6 +39,7 @@
 
 .custom-nav-item > a.active {
     color: var(--primary);
+<<<<<<< HEAD
 }
 
 .adminpwd{
@@ -70,4 +71,6 @@
 .adminuserpage{
     display: flex;
     align-items: center;
+=======
+>>>>>>> 3d1a224a9505510202f469d21a7c3993e957ab86
 }
