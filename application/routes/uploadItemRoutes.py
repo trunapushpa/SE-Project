@@ -7,11 +7,24 @@ from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from application import db, app
 from application.dbModels.items import Items
+from application.dbModels.wordVector import WordVector
 from application.routes.indexRoutes import allowed_file, LOCATIONS
 
 from ..ml.cv import extract_feature as image_extract_feature  
 
 upload_item = Blueprint('upload_item', __name__)
+
+
+def process_text_query(query):
+    query_list = query.split()
+    result_vector, words = [0] * 300, 0
+    for word in query_list:
+        results = WordVector.query.filter(WordVector.word == word).all()
+        if len(results):
+            result_vector = [x + y for (x, y) in zip(result_vector, results[0].vector)]
+            words = words + 1
+    result_vector = [x / words for x in result_vector]
+    return result_vector
 
 
 @upload_item.route("/get_item_description", methods=['POST'])
@@ -45,6 +58,8 @@ def uploaditem():
         filename = request.form['filename']
         f_vector = request.form['f_vector'].split(",")
         feature_vector = [float(i) for i in f_vector]
+        text_feature_vector = process_text_query(description)
+        print(text_feature_vector)
         timestamp = time.mktime(time.strptime(input_date + " " + input_time, "%Y-%m-%d %H:%M"))
         new_item = Items(current_user.user_id, item_type, location, filename, description, timestamp,
                          feature_vector)
