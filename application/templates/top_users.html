@@ -18,12 +18,12 @@
                         <td>
                             {% set ns = namespace(rank=0) %}
                             {{ user.first_name }} {{ user.last_name }} &nbsp;
-                            {% for ascRankValue in ascRankValues %}
+                            {% for ascRankValue in config.ASCRANKVALUES %}
                                 {% if user.reward >= ascRankValue %}
                                     {% set ns.rank = loop.index0 %}
                                 {% endif %}
                             {% endfor %}
-                            <span class="badge badge-pill badge-{{ ascRankColors[ns.rank] }}">{{ ascRanks[ns.rank] }}</span>
+                            <span class="badge badge-pill badge-{{ config.ASCRANKCOLORS[ns.rank] }}">{{ config.ASCRANKS[ns.rank] }}</span>
                         </td>
                         <td>{{ user.reward }}</td>
                     </tr>
@@ -34,26 +34,26 @@
         <div class="col-12 col-lg-5 ml-auto">
             <h3 class="my-4 mt-lg-0">Reward System</h3>
             <ul>
-                <li class="my-2"><strong>Lost : </strong> The user who uploads the item gets {{ reward['lost'][0] }}
-                    point and the user who finds it gets {{ reward['lost'][1] }} points.
+                <li class="my-2"><strong>Lost : </strong> The user who uploads the item gets {{ config.REWARD['lost'][0] }}
+                    point and the user who finds it gets {{ config.REWARD['lost'][1] }} points.
                 </li>
-                <li class="my-2"><strong>Found : </strong> The user who uploads the item gets {{ reward['found'][0] }}
-                    points and the owner gets {{ reward['found'][1] }} point.
+                <li class="my-2"><strong>Found : </strong> The user who uploads the item gets {{ config.REWARD['found'][0] }}
+                    points and the owner gets {{ config.REWARD['found'][1] }} point.
                 </li>
-                <li class="my-2"><strong>Buy/Sell : </strong> Both buyer and the seller get {{ reward['buy'][0] }}
+                <li class="my-2"><strong>Buy/Sell : </strong> Both buyer and the seller get {{ config.REWARD['buy'][0] }}
                     points.
                 </li>
                 <li class="my-2">If you are unable to find your item or a buyer/seller/owner, you still
-                    get {{ reward['unsuccessful'] }} point.
+                    get {{ config.REWARD['unsuccessful'] }} point.
                 </li>
             </ul>
             <h3 class="mb-4 mt-5">Ranking System</h3>
             <table class="table table-sm table-borderless col-7 ml-3">
                 <tbody>
-                {% for rankV in ascRankValues|reverse %}
+                {% for rankV in config.ASCRANKVALUES|reverse %}
                     <tr>
                         <td>Points >= {{ rankV }}</td>
-                        <td><span class="badge badge-pill badge-{{ ascRankColors[loop.revindex0] }}">{{ ascRanks[loop.revindex0] }}</span></td>
+                        <td><span class="badge badge-pill badge-{{ config.ASCRANKCOLORS[loop.revindex0] }}">{{ config.ASCRANKS[loop.revindex0] }}</span></td>
                     </tr>
                 {% endfor %}
                 </tbody>

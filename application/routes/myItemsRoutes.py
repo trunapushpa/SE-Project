@@ -1,12 +1,11 @@
 import os
-from flask import Blueprint, redirect, flash, url_for, render_template, request
+from flask import Blueprint, redirect, flash, render_template, request
 from flask_login import current_user, login_required
 from application import db, app
 from application.dbModels.items import Items
 from application.dbModels.message import Messages
 from application.dbModels.users import Users
 from application.forms.markInactiveForm import MarkInactiveForm
-from application.routes.topUsersRoutes import REWARD
 
 my_items = Blueprint('my_items', __name__)
 
@@ -46,10 +45,10 @@ def mark_inactive():
             if user2.email == current_user.email:
                 flash('Nice try ;)', 'warning')
                 return redirect(request.referrer)
-            current_user.reward += REWARD[item.type][0]
-            user2.reward += REWARD[item.type][1]
+            current_user.reward += app.config.REWARD[item.type][0]
+            user2.reward += app.config.REWARD[item.type][1]
         else:
-            current_user.reward += REWARD['unsuccessful']
+            current_user.reward += app.config.REWARD['unsuccessful']
         item.active = False
         db.session.commit()
         flash('Item marked inactive', 'success')

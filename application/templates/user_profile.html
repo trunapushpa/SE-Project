@@ -2,6 +2,24 @@
 {% block content %}
     <div class="col-lg-6">
         <div class="page-header "><h1 class="display-4"> My Profile </h1>
+        <hr class="my-4">
+        </div>
+
+        <div class="pt-1 pb-1">
+            {% set ns = namespace(rank=0) %}
+            {% for ascRankValue in config.ASCRANKVALUES %}
+                {% if current_user.reward >= ascRankValue %}
+                    {% set ns.rank = loop.index0 %}
+                {% endif %}
+            {% endfor %}
+                <h5>Rank: <small><span
+                        class="badge badge-pill badge-{{ config.ASCRANKCOLORS[ns.rank] }}">{{ config.ASCRANKS[ns.rank] }}</span> </small>
+                    &nbsp;&nbsp; Points: {{ current_user.reward }}</h5>
+        {% if ns.rank != 4 %}
+            {% set pointsneeded = config.ASCRANKVALUES[ns.rank + 1] - current_user.reward %}
+            <p class="text-muted"><em> {{ pointsneeded }} more point{% if pointsneeded > 1 %}s{% endif %} needed to become </em> <small> <span
+                    class="badge badge-pill badge-{{ config.ASCRANKCOLORS[ns.rank + 1] }}">{{ config.ASCRANKS[ns.rank + 1] }}</span></small></p>
+        {% endif %}
         </div>
 
         <ul class="nav nav-tabs my-4">

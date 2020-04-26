@@ -6,7 +6,7 @@ from application.dbModels.items import Items
 from application.dbModels.wordVector import WordVector
 from application.forms.MessageForm import MessageForm
 from application.forms.SearchForm import SearchForm
-from application.routes.topUsersRoutes import ascRankValues, ascRankColors, ascRanks
+from .. import app
 
 from ..ml.cv import extract_feature as image_extract_feature
 
@@ -91,9 +91,9 @@ def get_contact_info():
     name = user.first_name + " " + user.last_name
     email = user.email
     rank_id = 0
-    for i, rank in enumerate(ascRankValues):
+    for i, rank in enumerate(app.config.ASCRANKVALUES):
         if user.reward >= rank:
             rank_id = i
-    rank_html = "&nbsp;<small><small><span class=\"badge badge-pill badge-" + ascRankColors[rank_id] + "\">" + ascRanks[
+    rank_html = "&nbsp;<small><small><span class=\"badge badge-pill badge-" + app.config.ASCRANKCOLORS[rank_id] + "\">" + app.config.ASCRANKS[
         rank_id] + "</span></small></small>"
     return jsonify(name=name, email=email, rank=rank_html)

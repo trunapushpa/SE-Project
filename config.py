@@ -10,6 +10,11 @@ class Config(object):
     DBSERVER = 'lostnfounddb.postgres.database.azure.com:5432'
     SQLALCHEMY_DATABASE_URI = f"postgresql://{DBUSER}:{DBPWD}@{DBSERVER}/{DBNAME}" 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    ASCRANKVALUES = [0, 5, 20, 50, 100]
+    ASCRANKS = ['Rookie', 'Beginner', 'Skilled', 'Proficient', 'Expert']
+    ASCRANKCOLORS = ['secondary', 'success', 'info', 'warning', 'danger']
+    REWARD = {'lost': [1, 6], 'found': [6, 1], 'buy': [3, 3], 'sell': [3, 3], 'unsuccessful': 1}
     #"dbname='lostnfound' user='myadmin@lostnfounddb' host='lostnfounddb.postgres.database.azure.com' password='lostnfound@12345' port='5432' sslmode='true'"
 
 class ProductionConfig(Config):
