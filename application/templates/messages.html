@@ -20,7 +20,7 @@
                     {% for msg in messages %}
                         <div class="list-group-item flex-column align-items-start py-4">
                             <div class="row">
-                                <div class="col-3 col-lg-2">
+                                <div class="col-6 col-sm-3 col-lg-2 mb-2">
                                     <img class="img-fluid rounded"
                                          src="{{ url_for('static', filename='images/UploadedImages/' + msg.item.image_path) }}"
                                          alt="snake">
@@ -38,14 +38,18 @@
                                     <h5>Item: <span
                                             style="text-transform:capitalize;">{{ msg.item.type }}</span> {{ msg.item.caption }}
                                         @ {{ msg.item.location }}</h5>
-                                    <h5 class="mt-4 mr-lg-5">{{ msg.body }}</h5>
+                                <div class="row">
+                                <div class="col-12 col-lg-10">
+                                    <h5 class="mt-4 mr-lg-2">{{ msg.body }}</h5>
+                                </div>
                                     {% if not sent %}
-                                        <div class="text-right">
-                                            <button class="btn btn-primary my-1 mx-2" data-toggle="modal"
-                                                    data-target=".modal-{{ msg.id }}">Reply
+                                        <div class="col text-right mt-2">
+                                            <button class="btn btn-primary my-1 mx-1" data-toggle="modal"
+                                                    data-target=".modal-{{ msg.id }}"><i class="fal fa-reply"></i> &nbsp; Reply
                                             </button>
                                         </div>
                                     {% endif %}
+                                </div>
                                 </div>
                             </div>
                         </div>
