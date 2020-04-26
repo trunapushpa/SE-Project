@@ -21,35 +21,26 @@
                     <h4 class="card-text">{{ item.caption }}</h4>
                     <p></p>
                     <p class="card-text">
-                    <div class="row">
-                        <div class="col">
-                            <h5>Location</h5>{{ item.location }}
-                        </div>
-                        <div class="col">
-                            <h5>Date</h5>{{ item.timestamp.day }}-{{ item.timestamp.month }}-{{ item.timestamp.year }}
-                        </div>
-                        <div class="col">
-                            <h5>Time</h5>{{ item.timestamp.hour }}:{{ item.timestamp.minute }}
-                        </div>
+                    <div class="my-1">
+                        <h6 style="display: inline">Location: </h6>{{ item.location }}
                     </div>
-                    <h5 class="my-4">User: {{ item.first_name }} {{ item.last_name }}</h5>
-                    <div class="row">
-                        <div class="col-6">
-                            {% if item.active %}
-                                <a href="{{ url_for('all_items.change_anyitem_state', item_id=item.item_id, state='inactive') }}"
-                                   class="btn btn-block btn-warning">Mark
-                                    Inactive</a>
-                            {% else %}
-                                <a href="{{ url_for('all_items.change_anyitem_state', item_id=item.item_id, state='active') }}"
-                                   class="btn btn-block btn-success">Mark
-                                    Active</a>
-                            {% endif %}
-                        </div>
-                        <div class="col-6">
-                            <a href="{{ url_for('all_items.delete_anyitem', item_id=item.item_id) }}"
-                               class="btn btn-block btn-{% if session['theme']=='darkly' %}light{% else %}dark{% endif %}">Delete</a>
-                        </div>
+                    <div>
+                        <h6 style="display: inline">
+                            Date: </h6>{{ item.timestamp.day }}/{{ item.timestamp.month }}/{{ item.timestamp.year %100 }}
+                        &nbsp; <h6 style="display: inline">
+                        Time: </h6>{{ item.timestamp.hour }}:{{ item.timestamp.minute }}
                     </div>
+                    <h5 class="my-4">{{ item.first_name }} {{ item.last_name }}</h5>
+                    {% if item.active %}
+                        <a href="{{ url_for('all_items.change_anyitem_state', item_id=item.item_id, state='inactive') }}"
+                           class="card-link">Mark Inactive</a>
+                    {% else %}
+                        <a href="{{ url_for('all_items.change_anyitem_state', item_id=item.item_id, state='active') }}"
+                           class="card-link">Mark Active</a>
+                    {% endif %}
+
+                    <a href="{{ url_for('all_items.delete_anyitem', item_id=item.item_id) }}"
+                       class="card-link">Delete</a>
                 </div>
             </div>
         {% endfor %}

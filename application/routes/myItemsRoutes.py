@@ -3,6 +3,7 @@ from flask import Blueprint, redirect, flash, url_for, render_template, request
 from flask_login import current_user, login_required
 from application import db, app
 from application.dbModels.items import Items
+from application.dbModels.message import Messages
 from application.dbModels.users import Users
 from application.forms.markInactiveForm import MarkInactiveForm
 from application.routes.topUsersRoutes import REWARD
@@ -21,18 +22,19 @@ def myitems():
 @login_required
 def delete_item(item_id):
     item = Items.query.filter_by(item_id=item_id).first()
+    Messages.query.filter_by(item_id=item_id).delete()
+    db.session.commit()
     if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], item.image_path)):
         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image_path))
     db.session.delete(item)
     db.session.commit()
     flash('Successfully Deleted', 'success')
-    return redirect(url_for('my_items.myitems'))
+    return redirect(request.referrer)
 
 
 @my_items.route("/mark_inactive", methods=['POST'])
 def mark_inactive():
     form = MarkInactiveForm()
-    form.success.choices = ['Yes', 'No']
     if form.validate_on_submit():
         item_id = form.item_id.data
         item = Items.query.filter_by(item_id=item_id).first()
@@ -66,4 +68,4 @@ def change_item_state(item_id, state):
         item.active = True
     db.session.commit()
     flash(f"Item marked {state}", 'success')
-    return redirect(url_for('my_items.myitems'))
+    return redirect(request.referrer)
