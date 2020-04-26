@@ -1,6 +1,9 @@
 from flask import Blueprint, redirect, flash, url_for, render_template, request
 from flask_login import current_user, login_required
-from application import db, app
+from sqlalchemy import or_
+from application import db
+from application.dbModels.items import Items
+from application.dbModels.message import Messages
 from application.dbModels.users import Users
 from application.forms.UpdatePwdForm import UpdatePwdForm
 from application.forms.NewUserForm import NewUserForm
@@ -16,20 +19,23 @@ def allusers():
         new_user_form = NewUserForm()
         # Logged in user should not be able to edit his/her account
         users = Users.query.filter(Users.user_id != current_user.user_id).order_by(Users.user_id.asc()).all()
-        return render_template("allusers.html", users = users, update_pwd_form = update_pwd_form, form = new_user_form)
+        return render_template("allusers.html", users=users, update_pwd_form=update_pwd_form, form=new_user_form)
     else:
         flash('Access denied to requested page', 'danger')
         return redirect(url_for('home.index'))
+
 
 @all_users.route('/deleteuser/<user_id>', methods=['GET'])
 @login_required
 def deleteuser(user_id):
     if current_user.isadmin:
-        user = Users.query.filter_by(user_id = user_id).first()
-        if(user != None):
+        user = Users.query.filter_by(user_id=user_id).first()
+        if user is not None:
+            Messages.query.filter(or_(Messages.sender_id == user_id, Messages.recipient_id == user_id)).delete()
+            Items.query.filter_by(user_id=user_id).delete()
             db.session.delete(user)
             db.session.commit()
-            flash(f'{user.first_name} user deleted successfully.', 'success')
+            flash(f'User {user.first_name} deleted successfully.', 'success')
         else:
             flash('Something went wrong..', 'danger')
         return redirect(url_for('all_users.allusers'))
@@ -37,14 +43,15 @@ def deleteuser(user_id):
         flash('Access denied to requested page', 'danger')
         return redirect(url_for('home.index'))
 
-@all_users.route('/changepassword/<user_id>', methods = ['POST'])
+
+@all_users.route('/changepassword/<user_id>', methods=['POST'])
 @login_required
 def changepassword(user_id):
     if current_user.isadmin:
         form = UpdatePwdForm()
         if form.validate_on_submit():
-            user = Users.query.filter_by(user_id = user_id).first()   
-            if(user != None):
+            user = Users.query.filter_by(user_id=user_id).first()
+            if user is not None:
                 user.set_password(form.password.data)
                 db.session.add(user)
                 db.session.commit()
@@ -53,10 +60,11 @@ def changepassword(user_id):
                 flash('Something went wrong..', 'danger')
         if not form.password.data == form.confirmPassword.data:
             flash('Password and Confirmed Password does not match!!', 'danger')
-        return redirect(url_for('all_users.allusers')) 
+        return redirect(url_for('all_users.allusers'))
     else:
         flash('Access denied to requested page', 'danger')
     return redirect(url_for('home.index'))
+
 
 @all_users.route("/newuser", methods=["POST"])
 @login_required
@@ -73,9 +81,9 @@ def newuser():
             new_user.set_password(password)
             db.session.add(new_user)
             db.session.commit()
-            flash(f"User successully created.", "success")
+            flash(f"User successfully created.", "success")
         else:
-            if not user_form.errors == None:
+            if user_form.errors is not None:
                 for error in user_form.errors:
                     flash(f"{error} : {user_form.errors[error]}", "danger")
         return redirect(url_for('all_users.allusers'))
