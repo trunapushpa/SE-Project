@@ -6,7 +6,7 @@ import config
 from application import app, db
 
 
-class ProjectTests(unittest.TestCase):
+class LoginTests(unittest.TestCase):
 
     ############################
     #### setup and teardown ####
@@ -35,11 +35,6 @@ class ProjectTests(unittest.TestCase):
     #### tests ####
     ###############
 
-    # def test_main_page(self):
-    #     response = self.app.get('/', follow_redirects=True)
-    #     self.assertIn(b'Some catchy content!', response.data)
-    #     self.assertIn(b'Some more catchy content goes here', response.data)
-
     def login(self, email, password):
         return self.app.post(
             '/login',
@@ -56,9 +51,10 @@ class ProjectTests(unittest.TestCase):
         )
 
     def test_user_login_form_displays(self):
+        self.app.get('/logout', follow_redirects=True)
         response = self.app.get('/login')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Login', response.data)
+        self.assertIn(b'Sign in', response.data)
 
     def test_valid_user_login(self):
         self.app.get('/register', follow_redirects=True)
