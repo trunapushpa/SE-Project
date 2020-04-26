@@ -40,7 +40,8 @@
                     {% endif %}
 
                     <a href="{{ url_for('all_items.delete_anyitem', item_id=item.item_id) }}"
-                       class="card-link">Delete</a>
+                       class="card-link" data-toggle="tooltip" data-placement="bottom"
+                            title="This will delete all the messages related to this item too.">Delete</a>
                 </div>
             </div>
         {% endfor %}
