@@ -26,12 +26,12 @@ def process_text_query(query):
     for word in query_list:
         results = WordVector.query.filter(WordVector.word == word).all()
         if len(results):
-            result_vector = result_vector + results[0].vector
+            result_vector = [x + y for (x, y) in zip(result_vector, results[0].vector)]
             words = words + 1
     result_vector = [x / words for x in result_vector]
     return result_vector
 
-def process_text_query(image):
+def process_image_query(image):
     save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], 'query-' + str('-'.join(str(datetime.datetime.now()).split(' '))))
     file.save(save_fpath)
     image_feature_vector, image_text_description = image_extract_feature(save_fpath)
