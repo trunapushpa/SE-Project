@@ -5,8 +5,8 @@ from application.dbModels.users import Users
 from application import db
 
 class RegisterForm(FlaskForm):
-    first_name = StringField("First Name", validators=[DataRequired(), Length(min=5, max=50)])
-    last_name = StringField("Last Name", validators=[DataRequired(), Length(min=5, max=50)])
+    first_name = StringField("First Name", validators=[DataRequired(), Length(min=2, max=50)])
+    last_name = StringField("Last Name", validators=[DataRequired(), Length(min=1, max=50)])
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=5, max=20)])
     confirmPassword = PasswordField("Confirm Password", validators=[DataRequired(), Length(min=5, max=20), EqualTo('password')])

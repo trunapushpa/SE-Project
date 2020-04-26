@@ -6,7 +6,7 @@ import config
 from application import app, db
 
 
-class ProjectTests(unittest.TestCase):
+class SignupTests(unittest.TestCase):
 
     ############################
     #### setup and teardown ####
@@ -34,11 +34,6 @@ class ProjectTests(unittest.TestCase):
     ###############
     #### tests ####
     ###############
-
-    # def test_main_page(self):
-    #     response = self.app.get('/', follow_redirects=True)
-    #     self.assertIn(b'Some catchy content!', response.data)
-    #     self.assertIn(b'Some more catchy content goes here', response.data)
 
     def register(self, first_name, last_name, email, password, confirmPassword):
         return self.app.post(

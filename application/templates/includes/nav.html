@@ -47,28 +47,6 @@
                     <li class="nav-item">
                         <a class="nav-link {% if top_users %} active {% endif %}" href="{{ url_for('top_users.top_users_page') }}">Top Users</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Themes <span
-                                class="caret"></span></a>
-                        <div class="dropdown-menu" aria-labelledby="themes">
-                            <form id="litera-form" action="/switch_theme/litera" method="post">
-                                <a href="#" onclick="document.getElementById('litera-form').submit();"
-                                   class="dropdown-item">Litera</a>
-                            </form>
-                            <form id="flatly-form" action="/switch_theme/flatly" method="post">
-                                <a href="#" onclick="document.getElementById('flatly-form').submit();"
-                                   class="dropdown-item">Flatly</a>
-                            </form>
-                            <form id="darkly-form" action="/switch_theme/darkly" method="post">
-                                <a href="#" onclick="document.getElementById('darkly-form').submit();"
-                                   class="dropdown-item">Darkly</a>
-                            </form>
-                            <form id="sketchy-form" action="/switch_theme/sketchy" method="post">
-                                <a href="#" onclick="document.getElementById('sketchy-form').submit();"
-                                   class="dropdown-item">Sketchy</a>
-                            </form>
-                        </div>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link {% if about %} active {% endif %}" href="{{ url_for('about') }}">About Us</a>
                     </li>
@@ -79,36 +57,38 @@
                             data-placement="bottom" title="Messages">
                             <a href="{{ url_for('message.messages') }}" class="nav-link" id="msg-nav-link">
                             {% set new_messages = current_user.new_messages() %}
-                                <i class="fas fa-envelope-open{% if new_messages %}-text{% endif %}"></i>
-                                {% if new_messages %}
-                                    <sup>
-                                    <span id="message_count"
-                                          class="badge badge-pill badge-{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %}secondary{% endif %}"
-                                          style="visibility: {% if new_messages %}visible
-                                          {% else %}hidden {% endif %};">
-                                    {{ new_messages }}
-                                    </span>
-                                    </sup>
-                                {% endif %}
+                                <i class="far fa-envelope-open{% if new_messages %}-text faa-shake animated{% endif %}"></i>
+{#                                {% if new_messages %}#}
+{#                                    <sup>#}
+{#                                    <span id="message_count"#}
+{#                                          class="badge badge-pill badge-{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %}secondary{% endif %}"#}
+{#                                          style="visibility: {% if new_messages %}visible#}
+{#                                          {% else %}hidden {% endif %};">#}
+{#                                    {{ new_messages }}#}
+{#                                    </span>#}
+{#                                    </sup>#}
+{#                                {% endif %}#}
                             </a>
                         </li>
+                        {% include "includes/theme_picker.html" %}
                         <li class="nav-item {% if myprofile %} active {% endif %} mr-3" data-toggle="tooltip"
                             data-placement="bottom" title="My Profile">
                             <a href="{{ url_for('my_profile.myprofile') }}" class="nav-link"><i
-                                    class="fas fa-user-cog"></i></a>
+                                    class="far fa-user"></i></a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ url_for('user.logout') }}" class="nav-link" data-toggle="tooltip"
                                data-placement="bottom" title="Logout">
-                                <i class="fas fa-door-open"></i>
+                                <i class="far fa-sign-out"></i>
                             </a>
                         </li>
                     {% else %}
-                        <li class="nav-item {% if register %} active {% endif %}">
-                            <a href="{{ url_for('user.register') }}" class="nav-link">Sign Up</a>
+                        {% include "includes/theme_picker.html" %}
+                        <li class="nav-item {% if register %} active {% endif %} mr-2" data-toggle="tooltip" data-placement="bottom" title="Sign Up">
+                            <a href="{{ url_for('user.register') }}" class="nav-link"><i class="far fa-user-plus"></i></a>
                         </li>
-                        <li class="nav-item {% if login %} active {% endif %}">
-                            <a href="{{ url_for('user.login') }}" class="nav-link">Login</a>
+                        <li class="nav-item {% if login %} active {% endif %}" data-toggle="tooltip" data-placement="bottom" title="Log In">
+                            <a href="{{ url_for('user.login') }}" class="nav-link"><i class="far fa-sign-in"></i></a>
                         </li>
                     {% endif %}
                 </ul>
@@ -123,11 +103,12 @@
         // ...
         function set_message_count(n) {
             if (n > 0) {
-                $('#msg-nav-link').html("<i class='fas fa-envelope-open-text'></i> <sup> <span class='badge badge-pill badge-"
-                    + "{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %} secondary{% endif %}'"
-                    + "style=\"visibility: visible;\">" + n + "</span></sup>");
+                $('#msg-nav-link').html("<i class='far fa-envelope-open-text faa-shake animated'></i>");
+                    {#+" <sup> <span class='badge badge-pill badge-"#}
+                    {#+ "{% if not session['theme'] or session['theme'] == 'litera' %}primary{% else %} secondary{% endif %}'"#}
+                    {#+ "style=\"visibility: visible;\">" + n + "</span></sup>");#}
             } else {
-                $('#msg-nav-link').html("<i class='fas fa-envelope-open'></i>");
+                $('#msg-nav-link').html("<i class='far fa-envelope-open'></i>");
             }
             {#$('#message_count').text(n);#}
             {#$('#message_count').css('visibility', n ? 'visible' : 'hidden');#}

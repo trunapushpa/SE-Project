@@ -213,18 +213,14 @@
                         {{ item.type }}
                     </h2>
                     <h4 class="card-text">{{ item.caption }}</h4>
-                    <p></p>
-                    <p class="card-text">
-                    <div class="row">
-                        <div class="col">
-                            <h5>Location</h5>{{ item.location }}
-                        </div>
-                        <div class="col">
-                            <h5>Date</h5>{{ item.timestamp.day }}-{{ item.timestamp.month }}-{{ item.timestamp.year }}
-                        </div>
-                        <div class="col">
-                            <h5>Time</h5>{{ item.timestamp.hour }}:{{ item.timestamp.minute }}
-                        </div>
+                    <div class="my-1">
+                        <h6 style="display: inline">Location: </h6>{{ item.location }}
+                    </div>
+                    <div>
+                        <h6 style="display: inline">
+                            Date: </h6>{{ item.timestamp.day }}/{{ item.timestamp.month }}/{{ item.timestamp.year %100 }}
+                        &nbsp; <h6 style="display: inline">
+                        Time: </h6>{{ item.timestamp.hour }}:{{ item.timestamp.minute }}
                     </div>
                 </div>
             </div>

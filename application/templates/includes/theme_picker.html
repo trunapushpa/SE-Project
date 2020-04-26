@@ -1,0 +1,25 @@
+<li class="nav-item dropdown mr-3" title="Themes">
+    <a class="nav-link" data-toggle="dropdown" href="#" id="themes"><i class="far fa-palette"></i><span
+            class="caret"></span></a>
+    <div class="dropdown-menu" aria-labelledby="themes">
+        <form id="litera-form" action="/switch_theme/litera" method="post">
+            <a href="#" onclick="document.getElementById('litera-form').submit();"
+               class="dropdown-item">Litera</a>
+        </form>
+        <form id="flatly-form" action="/switch_theme/flatly" method="post">
+            <a href="#" onclick="document.getElementById('flatly-form').submit();"
+               class="dropdown-item">Flatly</a>
+        </form>
+        <form id="darkly-form" action="/switch_theme/darkly" method="post">
+            <a href="#" onclick="document.getElementById('darkly-form').submit();"
+               class="dropdown-item">Darkly</a>
+        </form>
+        <form id="sketchy-form" action="/switch_theme/sketchy" method="post">
+            <a href="#" onclick="document.getElementById('sketchy-form').submit();"
+               class="dropdown-item">Sketchy</a>
+        </form>
+    </div>
+</li>
+<script>
+    {#$('[data-toggle-second="tooltip"]').tooltip();#}
+</script>

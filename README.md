@@ -19,3 +19,21 @@ Trust is a major issue when it comes to purchasing a used good from an unknown, 
    ```
    flask run --host=0.0.0.0
    ```
+   
+## How to Run Tests
+
+* To run all tests :
+    ```
+    python -m unittest application.tests
+    ```
+
+* To run a single test Module, eg: 
+    ```
+    python -m unittest application.tests.LoginTests
+    ```
+  
+* To run a single test, eg: 
+    ```
+    python -m unittest application.tests.LoginTests.test_user_login_form_displays
+    ```
+ 
