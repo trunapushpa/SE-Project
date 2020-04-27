@@ -43,11 +43,21 @@
                                     <h5 class="mt-4 mr-lg-2">{{ msg.body }}</h5>
                                 </div>
                                     {% if not sent %}
-                                        <div class="col text-right mt-2">
-                                            <button class="btn btn-primary my-1 mx-1" data-toggle="modal"
-                                                    data-target=".modal-{{ msg.id }}"><i class="fal fa-reply"></i> &nbsp; Reply
-                                            </button>
-                                        </div>
+                                        {% if msg.sender_id == 0 %}
+                                            <div class="col text-right mt-2">
+                                                <button class="btn btn-primary my-1 mx-1" data-toggle="modal"
+                                                        data-target=".modal-{{ msg.id }}"><i
+                                                        class="fal fa-eye"></i>&nbsp; View
+                                                </button>
+                                            </div>
+                                        {% else %}
+                                            <div class="col text-right mt-2">
+                                                <button class="btn btn-primary my-1 mx-1" data-toggle="modal"
+                                                        data-target=".modal-{{ msg.id }}"><i class="fal fa-reply"></i>
+                                                    &nbsp; Reply
+                                                </button>
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                                 </div>
@@ -99,6 +109,50 @@
             </nav>
             {% if not sent %}
                 {% for msg in messages %}
+                    {% if msg.sender_id == 0 %}
+                        <div class="modal fade modal-{{ msg.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header mx-3">
+                                        <h3 class="modal-title" style="text-transform:capitalize;">
+                                            <strong>{{ msg.item.type }} </strong>
+                                        </h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body mx-3">
+                                        <h5 class="mt-2"><strong>Item:</strong>&nbsp;{{ msg.item.caption }}</h5>
+{#                                        <h6 class="mt-2"></h6>#}
+                                        <h6 class="mb-4 pb-1" ><strong>Location:</strong>&nbsp;{{ msg.item.location }} &nbsp;&nbsp; <strong>Date:</strong>&nbsp;{{ msg.item.timestamp.day }}/{{ msg.item.timestamp.month }}/{{ msg.item.timestamp.year %100 }} &nbsp;&nbsp;&nbsp; <strong>Time:</strong>&nbsp;{{ msg.item.timestamp.hour }}:{{ msg.item.timestamp.minute }} </h6>
+
+                                        <div class="mt-3 mb-4">
+                                            <h4><strong>Contact User</strong></h4>
+                                            <hr class="mb-3 my-3 col-6 mx-0 text-left"/>
+                                            <h5><strong>Name:&nbsp;</strong>{{ msg.item.user.first_name }} {{ msg.item.user.last_name }}</h5>
+                                            <h5 class="mt-2"><strong>Email:&nbsp;&nbsp;</strong><a href="mailto:{{ msg.item.user.email }}">{{ msg.item.user.email }}</a></h5>
+                                            <form name="Message" method="post" class="form mt-4"
+                                                  action="{{ url_for('message.send_message', recipient=msg.item.user_id) }}">
+                                                {{ send_message_form.hidden_tag() }}
+                                                <input type="number" name="item_id" value="{{ msg.item.item_id }}" hidden>
+                                                <div class="form-group">
+                                                    <label for="message"><h5><strong>Send Message</strong></h5></label>
+                                                    <textarea id="message" class="form-control" name="message"
+                                                              aria-label="Message" rows="3"></textarea>
+                                                </div>
+                                                <div class="text-center mt-4">
+                                                    <button type="submit" name="Submit" value="Submit"
+                                                            class="btn btn{% if not session['theme'] or session['theme'] == 'litera' %}-outline{% endif %}-primary">
+                                                        Send Private Message
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
                     <div class="modal fade modal-{{ msg.id }}" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
@@ -140,6 +194,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         </div>

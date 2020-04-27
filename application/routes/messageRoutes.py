@@ -11,6 +11,15 @@ message = Blueprint('message', __name__)
 MESSAGES_PER_PAGE = 5
 
 
+def send_system_message(recipient_id, item_id):
+    system = Users.query.filter_by(user_id=0).first_or_404()
+    msg_receiver = Users.query.filter_by(user_id=recipient_id).first_or_404()
+    msg = Messages(author=system, recipient=msg_receiver, item_id=item_id, body='Is this the item you are looking for?')
+    msg_receiver.add_notification('unread_message_count', msg_receiver.new_messages())
+    db.session.add(msg)
+    db.session.commit()
+
+
 @message.route('/send_message/<recipient>', methods=['POST'])
 @login_required
 def send_message(recipient):

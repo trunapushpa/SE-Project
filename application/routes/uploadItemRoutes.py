@@ -9,6 +9,7 @@ from application import db, app
 from application.dbModels.items import Items
 from application.dbModels.wordVector import WordVector
 from application.routes.indexRoutes import allowed_file, LOCATIONS, filter_items, distance
+from .messageRoutes import send_system_message
 
 from ..ml.cv import extract_feature as image_extract_feature  
 
@@ -63,6 +64,7 @@ def uploaditem():
         new_item = Items(current_user.user_id, item_type, location, filename, description, timestamp,
                          feature_vector, text_feature_vector)
 
+        # Send notification to users of similar items
         notify_type = app.config['NOTIFY'][item_type]
         notify_items = filter_items(types=[notify_type])
         notify_items.sort(key = lambda item: distance([
@@ -74,6 +76,13 @@ def uploaditem():
 
         db.session.add(new_item)
         db.session.commit()
+
+        users_sent = []
+        for item in notify_items:
+            if item.user_id not in users_sent:
+                send_system_message(item.user_id, new_item.item_id)
+                users_sent.append(item.user_id)
+
         flash('Item successfully uploaded', 'success')
         return redirect(url_for('my_items.myitems'))
     return render_template("upload.html", date=datetime.now().strftime("%Y-%m-%d"),

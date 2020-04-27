@@ -7,7 +7,7 @@ class Items(db.Model):
     __tablename__ = 'items'
 
     item_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, unique=False, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), unique=False, nullable=False)
     type = db.Column(db.String(50), nullable=False)
     location = db.Column(db.String(50), nullable=False)
     timestamp = db.Column(db.TIMESTAMP, nullable=False, default=datetime.now)
@@ -16,6 +16,7 @@ class Items(db.Model):
     feature_vector = db.Column(db.ARRAY(db.FLOAT), nullable=False)
     word_vector = db.Column(db.ARRAY(db.FLOAT), nullable=False)
     active = db.Column(db.Boolean, default=True)
+    user = db.relationship("Users", backref=db.backref("users", uselist=False))
 
     def __init__(self, user_id, item_type, location, filename, description, timestamp, feature_vector, word_vector):
         self.user_id = user_id,
