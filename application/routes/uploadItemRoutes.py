@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from application import db, app
 from application.dbModels.items import Items
 from application.dbModels.wordVector import WordVector
-from application.routes.indexRoutes import allowed_file, LOCATIONS, filter_items, distance
+from application.routes.indexRoutes import allowed_file, LOCATIONS, filter_items, distance, process_text_query
 from .messageRoutes import send_system_message
 
 from ..ml.cv import extract_feature as image_extract_feature  
