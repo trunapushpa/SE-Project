@@ -21,6 +21,12 @@ def myitems():
 @login_required
 def delete_item(item_id):
     item = Items.query.filter_by(item_id=item_id).first()
+    if not item:
+        flash('No such item', 'danger')
+        return redirect(request.referrer), 400
+    if current_user.user_id != item.user_id and not current_user.isadmin:
+        flash('Unauthorised request', 'danger')
+        return redirect(request.referrer), 401
     Messages.query.filter_by(item_id=item_id).delete()
     db.session.commit()
     if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], item.image_path)):
@@ -37,6 +43,12 @@ def mark_inactive():
     if form.validate_on_submit():
         item_id = form.item_id.data
         item = Items.query.filter_by(item_id=item_id).first()
+        if not item:
+            flash('No such item', 'danger')
+            return redirect(request.referrer), 400
+        if (not current_user.isadmin) and (current_user.user_id != item.user_id):
+            flash('Unauthorised request', 'danger')
+            return redirect(request.referrer), 401
         if form.success.data == 'Yes':
             user2 = Users.query.filter_by(email=form.email.data).first()
             if not user2:
@@ -45,10 +57,11 @@ def mark_inactive():
             if user2.email == current_user.email:
                 flash('Nice try ;)', 'warning')
                 return redirect(request.referrer)
-            current_user.reward += app.config.REWARD[item.type][0]
-            user2.reward += app.config.REWARD[item.type][1]
+            current_user.reward += app.config['REWARD'][item.type][0]
+            user2.reward += app.config['REWARD'][item.type][1]
         else:
-            current_user.reward += app.config.REWARD['unsuccessful']
+            a = app.config
+            current_user.reward += app.config['REWARD']['unsuccessful']
         item.active = False
         db.session.commit()
         flash('Item marked inactive', 'success')
@@ -61,6 +74,12 @@ def mark_inactive():
 @login_required
 def change_item_state(item_id, state):
     item = Items.query.filter_by(item_id=item_id).first()
+    if not item:
+        flash('No such item', 'danger')
+        return redirect(request.referrer), 400
+    if (not current_user.isadmin) and current_user.user_id != item.user_id:
+        flash('Unauthorised request', 'danger')
+        return redirect(request.referrer), 401
     if state == 'inactive':
         item.active = False
     else:

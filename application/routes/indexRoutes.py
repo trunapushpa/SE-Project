@@ -91,9 +91,9 @@ def get_contact_info():
     name = user.first_name + " " + user.last_name
     email = user.email
     rank_id = 0
-    for i, rank in enumerate(app.config.ASCRANKVALUES):
+    for i, rank in enumerate(app.config['ASCRANKVALUES']):
         if user.reward >= rank:
             rank_id = i
-    rank_html = "&nbsp;<small><small><span class=\"badge badge-pill badge-" + app.config.ASCRANKCOLORS[rank_id] + "\">" + app.config.ASCRANKS[
+    rank_html = "&nbsp;<small><small><span class=\"badge badge-pill badge-" + app.config['ASCRANKCOLORS'][rank_id] + "\">" + app.config['ASCRANKS'][
         rank_id] + "</span></small></small>"
     return jsonify(name=name, email=email, rank=rank_html)
