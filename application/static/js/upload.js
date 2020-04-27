@@ -45,8 +45,6 @@ $('input[type="file"]').change(function (e) {
         contentType: false,
         processData: false,
         success: function (data, textStatus, jQxhr) {
-            console.log('recvd', data.f_vector)
-            console.log($('#f_vector'))
             $('#item-description')[0].innerText = data.description;
             $('#filename')[0].value = data.filename;
             $('#f_vector')[0].value = data.f_vector;

@@ -1,5 +1,4 @@
 import os
-import sys
 import time
 import uuid
 from datetime import datetime
@@ -11,7 +10,7 @@ from application.dbModels.items import Items
 from application.dbModels.wordVector import WordVector
 from application.routes.indexRoutes import allowed_file, LOCATIONS
 
-from ..ml.cv import extract_feature as image_extract_feature
+from ..ml.cv import extract_feature as image_extract_feature  
 
 upload_item = Blueprint('upload_item', __name__)
 
