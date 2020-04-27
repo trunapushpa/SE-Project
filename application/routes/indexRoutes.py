@@ -65,9 +65,11 @@ def distance(features, weights=None):
 
 def filter_items(locations=LOCATIONS, types=TYPES, start_date=MIN_DATE, end_date=MAX_DATE):
     return Items.query.filter(
+        Items.user_id != current_user.user_id,
         Items.location.in_(locations),
         Items.type.in_(types),
         Items.timestamp.between(start_date, end_date)).all()
+
 
 @home.route("/")
 @home.route("/home", methods=['GET', 'POST'])
