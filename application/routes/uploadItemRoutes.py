@@ -8,23 +8,11 @@ from werkzeug.utils import secure_filename
 from application import db, app
 from application.dbModels.items import Items
 from application.dbModels.wordVector import WordVector
-from application.routes.indexRoutes import allowed_file, LOCATIONS, filter_items, distance
+from application.routes.indexRoutes import allowed_file, LOCATIONS, filter_items, distance, process_text_query
 
 from ..ml.cv import extract_feature as image_extract_feature  
 
 upload_item = Blueprint('upload_item', __name__)
-
-
-def process_text_query(query):
-    query_list = query.split()
-    result_vector, words = [0] * 300, 0
-    for word in query_list:
-        results = WordVector.query.filter(WordVector.word == word).all()
-        if len(results):
-            result_vector = [x + y for (x, y) in zip(result_vector, results[0].vector)]
-            words = words + 1
-    result_vector = [x / words for x in result_vector]
-    return result_vector
 
 
 @upload_item.route("/get_item_description", methods=['POST'])
