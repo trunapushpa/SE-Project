@@ -1,7 +1,11 @@
+import os
+import uuid
 from datetime import datetime
 import numpy as np
 from flask_login import login_required, current_user
 from flask import render_template, request, jsonify, Blueprint
+from werkzeug.utils import secure_filename
+
 from application.dbModels.users import Users
 from application.dbModels.items import Items
 from application.dbModels.wordVector import WordVector
@@ -94,12 +98,16 @@ def index():
             print(search_type, query, types, locations, start_date.day, start_date.month, start_date.year)
             query_word_vector = process_text_query(query)
         elif search_type == 'simple-img':
-            # don't know if the following code works
             img = form.img.data
+            filename = secure_filename(str(uuid.uuid4()) + '.' + img.filename.rsplit('.', 1)[1].lower())
+            save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            img.save(save_fpath)
             query_word_vector, query_image_vector = process_image_query(form.img.data)
-            print(img)
         elif search_type == 'adv-img':
             img = form.img.data
+            filename = secure_filename(str(uuid.uuid4()) + '.' + img.filename.rsplit('.', 1)[1].lower())
+            save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            img.save(save_fpath)
             types = form.types.data
             locations = form.locations.data
             start_date = form.start_date.data
