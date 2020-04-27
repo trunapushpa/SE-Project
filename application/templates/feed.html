@@ -104,7 +104,7 @@
             </div>
             <div class="tab-pane fade" id="img-search">
                 <div id="normal-image-search">
-                    <form name="searchForm" action="{{ url_for('home.index') }}" method="POST" novalidate>
+                    <form name="searchForm" action="{{ url_for('home.index') }}" method="POST" enctype="multipart/form-data" novalidate>
                         {{ form.hidden_tag() }}
                         <input type="text" name="search_type" value="simple-img" hidden>
                         <div class="input-group mb-2 mt-2">
@@ -136,7 +136,7 @@
 
                 </div>
                 <div id="advanced-image-search">
-                    <form name="searchForm" action="{{ url_for('home.index') }}" method="POST" novalidate>
+                    <form name="searchForm" action="{{ url_for('home.index') }}" method="POST" enctype="multipart/form-data" novalidate>
                         {{ form.hidden_tag() }}
                         <input type="text" name="search_type" value="adv-img" hidden>
                         <div class="input-group mb-3 mt-2">
