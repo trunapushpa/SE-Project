@@ -14,7 +14,7 @@ variables:
   dockerRegistryServiceConnection: '17d79617-6c79-430b-b972-f4f2a8cac688'
   imageRepository: 'seproject'
   containerRegistry: 'seprojectacr.azurecr.io'
-  dockerfilePath: '*/Dockerfile'
+  dockerfilePath: 'Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'seprojectacrf61e-auth'
 
