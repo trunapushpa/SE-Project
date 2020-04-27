@@ -60,31 +60,30 @@ class AdminTests(unittest.TestCase):
         self.assertIn(b'Admin', response.data)
     
     def test_nonadmin_login(self):
-        response = self.login("b@b.com", "12345678")
+        response = self.login("c@c.com", "12345678")
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b'Admin', response.data)
 
     def test_nonadminuser_admin_route_access(self):
-        with self.app.session_transaction() as session:
-            session['user_id'] = 1
-            session['first_name'] = 'Mock'
-            session['last_name'] = 'user'
-            session['email'] = 'mockuser@mock.com'
-            session['isadmin'] = False
-            session['_fresh'] = True
-            response = self.browseRoute("/allusers")
-            self.assertIn(b'/home', response.data)
+        self.login("c@c.com", "12345678")
+        allusersroute = self.browseRoute("/allusers")
+        allitemsroute = self.browseRoute("/allitems")
+        self.assertIn(b'Access denied to requested page', allusersroute.data)
+        self.assertIn(b'Access denied to requested page', allitemsroute.data)
     
     def test_adminuser_admin_route_access(self):
-        with self.app.session_transaction() as session:
-            session['user_id'] = 1
-            session['first_name'] = 'Mock'
-            session['last_name'] = 'user'
-            session['email'] = 'mockuser@mock.com'
-            session['isadmin'] = True
-            session['_fresh'] = True
-            response = self.browseRoute("/allusers")
-            self.assertIn(b'/allusers', response.data)
+        self.login("testadmin@a.com", "LS1setup!")
+        allusersroute = self.browseRoute("/allusers")
+        allitemsroute = self.browseRoute("/allitems")
+        self.assertEqual(allusersroute.status_code, 200)
+        self.assertIn(b'All Users', allusersroute.data)
+        self.assertEqual(allitemsroute.status_code, 200)
+        self.assertIn(b'All Items', allitemsroute.data)
+    
+    def test_nonadminuser_delete_route(self):
+        self.login("c@c.com", "12345678")
+        response = self.browseRoute("/deleteuser/16")
+        self.assertIn(b'Access denied to requested page', response.data)
     
     def test_current_ctx(self):
         with self.app:

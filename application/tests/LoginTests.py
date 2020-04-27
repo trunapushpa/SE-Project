@@ -31,10 +31,6 @@ class LoginTests(unittest.TestCase):
     #### helper methods ####
     ########################
 
-    ###############
-    #### tests ####
-    ###############
-
     def login(self, email, password):
         return self.app.post(
             '/login',
@@ -49,6 +45,10 @@ class LoginTests(unittest.TestCase):
                       confirmPassword=confirmPassword),
             follow_redirects=True
         )
+
+    ###############
+    #### tests ####
+    ###############
 
     def test_user_login_form_displays(self):
         self.app.get('/logout', follow_redirects=True)

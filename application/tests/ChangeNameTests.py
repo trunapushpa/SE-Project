@@ -31,10 +31,6 @@ class ChangeNameTests(unittest.TestCase):
     #### helper methods ####
     ########################
 
-    ###############
-    #### tests ####
-    ###############
-
     def register(self, first_name, last_name, email, password, confirmPassword):
         return self.app.post(
             '/register',
@@ -42,6 +38,10 @@ class ChangeNameTests(unittest.TestCase):
                       confirmPassword=confirmPassword),
             follow_redirects=True
         )
+
+    ###############
+    #### tests ####
+    ###############
 
     def test_change_Name(self):
         self.app.get('/register', follow_redirects=True)
