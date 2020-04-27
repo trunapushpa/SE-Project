@@ -3,9 +3,12 @@ from flask_login import login_required, current_user
 from flask import render_template, request, jsonify, Blueprint
 from application.dbModels.users import Users
 from application.dbModels.items import Items
+from application.dbModels.wordVector import WordVector
 from application.forms.MessageForm import MessageForm
 from application.forms.SearchForm import SearchForm
-from application.routes.topUsersRoutes import ascRankValues, ascRankColors, ascRanks
+from .. import app
+
+from ..ml.cv import extract_feature as image_extract_feature
 
 home = Blueprint('home', __name__)
 
@@ -17,6 +20,23 @@ TYPES = ['lost', 'found', 'buy', 'sell']
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def process_text_query(query):
+    query_list = query.split()
+    result_vector, words = [0] * 300, 0
+    for word in query_list:
+        results = WordVector.query.filter(WordVector.word == word).all()
+        if len(results):
+            result_vector = [x + y for (x, y) in zip(result_vector, results[0].vector)]
+            words = words + 1
+    result_vector = [x / words for x in result_vector]
+    return result_vector
+
+def process_image_query(image):
+    save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], 'query-' + str('-'.join(str(datetime.datetime.now()).split(' '))))
+    file.save(save_fpath)
+    image_feature_vector, image_text_description = image_extract_feature(save_fpath)
+    word_feature_vector = process_text_query(image_text_description)
+    return word_feature_vector, image_feature_vector
 
 @home.route("/")
 @home.route("/home", methods=['GET', 'POST'])
@@ -32,7 +52,7 @@ def index():
         search_type = form.search_type.data
         if search_type == 'simple':
             query = form.query.data
-            print(query)
+            query_word_vector = process_text_query(query)
         elif search_type == 'adv':
             query = form.query.data
             types = form.types.data
@@ -40,9 +60,11 @@ def index():
             start_date = form.start_date.data
             end_date = form.end_date.data
             print(search_type, query, types, locations, start_date.day, start_date.month, start_date.year)
+            query_word_vector = process_text_query(query)
         elif search_type == 'simple-img':
             # don't know if the following code works
             img = form.img.data
+            query_word_vector, query_image_vector = process_image_query(form.img.data)
             print(img)
         elif search_type == 'adv-img':
             img = form.img.data
@@ -50,6 +72,7 @@ def index():
             locations = form.locations.data
             start_date = form.start_date.data
             end_date = form.end_date.data
+            query_word_vector, query_image_vector = process_image_query(form.img.data)
             print(search_type, types, img)
         items = Items.query.filter_by(location="Himalaya").all()
         new_search_form = SearchForm()
@@ -68,9 +91,9 @@ def get_contact_info():
     name = user.first_name + " " + user.last_name
     email = user.email
     rank_id = 0
-    for i, rank in enumerate(ascRankValues):
+    for i, rank in enumerate(app.config['ASCRANKVALUES']):
         if user.reward >= rank:
             rank_id = i
-    rank_html = "&nbsp;<small><small><span class=\"badge badge-pill badge-" + ascRankColors[rank_id] + "\">" + ascRanks[
+    rank_html = "&nbsp;<small><small><span class=\"badge badge-pill badge-" + app.config['ASCRANKCOLORS'][rank_id] + "\">" + app.config['ASCRANKS'][
         rank_id] + "</span></small></small>"
     return jsonify(name=name, email=email, rank=rank_html)

@@ -63,7 +63,7 @@ def ind_to_class(ind):
 
 '''
 def topk(fpath, k=1):
-	if k <= 1000:
+	if k <= 1000 and k > 0:
 		feat, preds = predict(fpath)
 		ind = np.argpartition(preds, -k)[-k:]
 		ind = ind[np.argsort(preds[ind])]

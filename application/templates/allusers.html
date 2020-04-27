@@ -118,7 +118,9 @@
             <td>{{ user.email }}</td>
             <td><a href="#" data-toggle="modal" data-target="#changepwdform{{user.user_id}}"><i
                         class="fas fa-key text-success ml-lg-5"></i></a></td>
-            <td><a href="{{ url_for('all_users.deleteuser', user_id = user.user_id)}}"><i
+            <td><a data-toggle="tooltip" data-placement="right"
+                   title="This will also delete messages and items related to the user."
+                   href="{{ url_for('all_users.deleteuser', user_id = user.user_id)}}"><i
                         class="fas fa-trash text-danger ml-lg-3"></i></a></td>
             <div class="modal fade" id="changepwdform{{user.user_id}}" tabindex="-1" role="dialog"
                 aria-labelledby="myModalLabel" aria-hidden="true">
@@ -169,4 +171,5 @@
         </tr>
         {% endfor %}
     </tbody>
+</table>
 {% endblock %}
