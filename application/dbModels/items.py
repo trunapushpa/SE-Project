@@ -14,9 +14,10 @@ class Items(db.Model):
     image_path = db.Column(db.String(50), unique=True, nullable=False)
     caption = db.Column(db.String(50), unique=False, nullable=False)
     feature_vector = db.Column(db.ARRAY(db.FLOAT), nullable=False)
+    word_vector = db.Column(db.ARRAY(db.FLOAT), nullable=False)
     active = db.Column(db.Boolean, default=True)
 
-    def __init__(self, user_id, item_type, location, filename, description, timestamp, feature_vector):
+    def __init__(self, user_id, item_type, location, filename, description, timestamp, feature_vector, word_vector):
         self.user_id = user_id,
         self.type = item_type,
         self.location = location,
@@ -26,6 +27,4 @@ class Items(db.Model):
         if item_type in ['lost', 'found']:
             self.timestamp = datetime.fromtimestamp(timestamp)
         self.feature_vector = feature_vector
-
-
-
+        self.word_vector = word_vector

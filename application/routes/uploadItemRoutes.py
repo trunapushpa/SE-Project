@@ -59,10 +59,9 @@ def uploaditem():
         f_vector = request.form['f_vector'].split(",")
         feature_vector = [float(i) for i in f_vector]
         text_feature_vector = process_text_query(description)
-        print(text_feature_vector)
         timestamp = time.mktime(time.strptime(input_date + " " + input_time, "%Y-%m-%d %H:%M"))
         new_item = Items(current_user.user_id, item_type, location, filename, description, timestamp,
-                         feature_vector)
+                         feature_vector, text_feature_vector)
         db.session.add(new_item)
         db.session.commit()
         flash('Item successfully uploaded', 'success')
