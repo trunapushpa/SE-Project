@@ -1,4 +1,5 @@
 from datetime import datetime
+import numpy as np
 from flask_login import login_required, current_user
 from flask import render_template, request, jsonify, Blueprint
 from application.dbModels.users import Users
@@ -41,6 +42,26 @@ def process_image_query(image):
     word_feature_vector = process_text_query(image_text_description)
     return word_feature_vector, image_feature_vector
 
+def MSE(l1, l2):
+    l1 = np.asarray(l1)
+    l2 = np.asarray(l2)
+    return ((l1 - l2) ** 2).mean(axis = 0)
+
+def distance(item, word_vec, image_vec, word_w=1, image_w=1):
+    skip = True
+    word_distance = 0
+    if item.word_vector is not None and word_vec is not None:
+        word_distance = MSE(item.word_vector, word_vec)
+        skip = False
+
+    image_distance = 0
+    if item.feature_vector is not None and image_vec is not None:
+        image_distance = MSE(item.feature_vector, image_vec)
+        skip = False
+
+    return np.inf if skip else word_w * word_distance + image_w * image_distance
+
+
 @home.route("/")
 @home.route("/home", methods=['GET', 'POST'])
 def index():
@@ -56,6 +77,8 @@ def index():
         types = TYPES
         start_date = MIN_DATE
         end_date = MAX_DATE
+        query_word_vector = None
+        query_image_vector = None
 
         form = SearchForm()
         search_type = form.search_type.data
@@ -87,6 +110,7 @@ def index():
             Items.location.in_(locations),
             Items.type.in_(types),
             Items.timestamp.between(start_date, end_date)).all()
+        items.sort(key = lambda item: distance(item, query_word_vector, query_image_vector))
         new_search_form = SearchForm()
         new_message_form = MessageForm()
         return render_template("feed.html", index=True, items=items, form=new_search_form, locations=LOCATIONS,
