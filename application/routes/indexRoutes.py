@@ -63,6 +63,12 @@ def distance(features, weights=None):
     return np.inf if skip else loss
 
 
+def filter_items(locations=LOCATIONS, types=TYPES, start_date=MIN_DATE, end_date=MAX_DATE):
+    return Items.query.filter(
+        Items.location.in_(locations),
+        Items.type.in_(types),
+        Items.timestamp.between(start_date, end_date)).all()
+
 @home.route("/")
 @home.route("/home", methods=['GET', 'POST'])
 def index():
@@ -111,10 +117,8 @@ def index():
             end_date = form.end_date.data
             query_word_vector, query_image_vector = process_image_query(save_fpath)
             print(search_type, types, img)
-        items = Items.query.filter(
-            Items.location.in_(locations),
-            Items.type.in_(types),
-            Items.timestamp.between(start_date, end_date)).all()
+
+        items = filter_items(locations, types, start_date, end_date)
 
         items.sort(key = lambda item: distance([
                 (item.word_vector, query_word_vector),
