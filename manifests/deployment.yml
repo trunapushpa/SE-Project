@@ -1,0 +1,16 @@
+apiVersion : apps/v1beta1
+kind: Deployment
+metadata:
+  name: seproject 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: seproject 
+    spec:
+      containers:
+        - name: seproject 
+          image: seprojectacr.azurecr.io/seproject
+          ports:
+          - containerPort: 5000
