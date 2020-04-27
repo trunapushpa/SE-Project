@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from application import db, app
 from application.dbModels.items import Items
 from application.dbModels.wordVector import WordVector
-from application.routes.indexRoutes import allowed_file, LOCATIONS
+from application.routes.indexRoutes import allowed_file, LOCATIONS, filter_items, distance
 
 from ..ml.cv import extract_feature as image_extract_feature  
 
@@ -62,6 +62,16 @@ def uploaditem():
         timestamp = time.mktime(time.strptime(input_date + " " + input_time, "%Y-%m-%d %H:%M"))
         new_item = Items(current_user.user_id, item_type, location, filename, description, timestamp,
                          feature_vector, text_feature_vector)
+
+        notify_type = app.config['NOTIFY'][item_type]
+        notify_items = filter_items(types=[notify_type])
+        notify_items.sort(key = lambda item: distance([
+                (item.word_vector, text_feature_vector),
+                (item.feature_vector, feature_vector)],
+            [1, 1]))
+        if len(notify_items) > 10:
+            notify_items = notify_items[:10]
+
         db.session.add(new_item)
         db.session.commit()
         flash('Item successfully uploaded', 'success')

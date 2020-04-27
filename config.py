@@ -15,6 +15,7 @@ class Config(object):
     ASCRANKS = ['Rookie', 'Beginner', 'Skilled', 'Proficient', 'Expert']
     ASCRANKCOLORS = ['secondary', 'success', 'info', 'warning', 'danger']
     REWARD = {'lost': [1, 6], 'found': [6, 1], 'buy': [3, 3], 'sell': [3, 3], 'unsuccessful': 1}
+    NOTIFY = {'lost': 'found', 'found': 'lost', 'buy': 'sell', 'sell': 'buy'}
     #"dbname='lostnfound' user='myadmin@lostnfounddb' host='lostnfounddb.postgres.database.azure.com' password='lostnfound@12345' port='5432' sslmode='true'"
 
 class ProductionConfig(Config):
