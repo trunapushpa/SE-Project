@@ -1,5 +1,7 @@
 from datetime import datetime
 import numpy as np
+import os
+import sys
 from flask_login import login_required, current_user
 from flask import render_template, request, jsonify, Blueprint
 from application.dbModels.users import Users
@@ -36,7 +38,7 @@ def process_text_query(query):
     return result_vector
 
 def process_image_query(image):
-    save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], 'query-' + str('-'.join(str(datetime.datetime.now()).split(' '))))
+    save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], 'query-' + str('-'.join(str(datetime.now()).split(' '))))
     file.save(save_fpath)
     image_feature_vector, image_text_description = image_extract_feature(save_fpath)
     word_feature_vector = process_text_query(image_text_description)
@@ -95,7 +97,8 @@ def index():
             query_word_vector = process_text_query(query)
         elif search_type == 'simple-img':
             # don't know if the following code works
-            img = form.img.data
+            f_vector = form.f_vector.data
+            print('feature vector = ', f_vector)
             query_word_vector, query_image_vector = process_image_query(form.img.data)
             print(img)
         elif search_type == 'adv-img':
