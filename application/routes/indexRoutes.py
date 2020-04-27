@@ -39,10 +39,8 @@ def process_text_query(query):
         result_vector = [x / words for x in result_vector]
     return result_vector
 
-def process_image_query(image):
-    save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], 'query-' + str('-'.join(str(datetime.datetime.now()).split(' '))))
-    file.save(save_fpath)
-    image_feature_vector, image_text_description = image_extract_feature(save_fpath)
+def process_image_query(file_path):
+    image_feature_vector, image_text_description = image_extract_feature(file_path)
     word_feature_vector = process_text_query(image_text_description)
     return word_feature_vector, image_feature_vector
 
@@ -102,7 +100,7 @@ def index():
             filename = secure_filename(str(uuid.uuid4()) + '.' + img.filename.rsplit('.', 1)[1].lower())
             save_fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             img.save(save_fpath)
-            query_word_vector, query_image_vector = process_image_query(form.img.data)
+            query_word_vector, query_image_vector = process_image_query(save_fpath)
         elif search_type == 'adv-img':
             img = form.img.data
             filename = secure_filename(str(uuid.uuid4()) + '.' + img.filename.rsplit('.', 1)[1].lower())
@@ -112,7 +110,7 @@ def index():
             locations = form.locations.data
             start_date = form.start_date.data
             end_date = form.end_date.data
-            query_word_vector, query_image_vector = process_image_query(form.img.data)
+            query_word_vector, query_image_vector = process_image_query(save_fpath)
             print(search_type, types, img)
         items = Items.query.filter(
             Items.location.in_(locations),
