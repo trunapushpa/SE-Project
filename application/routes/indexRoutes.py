@@ -15,6 +15,8 @@ home = Blueprint('home', __name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 LOCATIONS = ['Himalaya', 'Vindhya', 'KCIS', 'NBH', 'OBH', 'JC', 'Bakul', 'BBC', 'Football Ground', 'Unknown']
 TYPES = ['lost', 'found', 'buy', 'sell']
+MIN_DATE = '1970-01-01'
+MAX_DATE = '2100-01-01'
 
 
 def allowed_file(filename):
@@ -49,6 +51,12 @@ def index():
             items = Items.query.filter(Items.user_id != current_user.user_id).all()
             return render_template("feed.html", index=True, items=items, form=form, locations=LOCATIONS, types=TYPES,
                                    date=datetime.now().strftime("%Y-%m-%d"), send_message_form=new_message_form)
+
+        locations = LOCATIONS
+        types = TYPES
+        start_date = MIN_DATE
+        end_date = MAX_DATE
+
         form = SearchForm()
         search_type = form.search_type.data
         if search_type == 'simple':
@@ -75,7 +83,10 @@ def index():
             end_date = form.end_date.data
             query_word_vector, query_image_vector = process_image_query(form.img.data)
             print(search_type, types, img)
-        items = Items.query.filter_by(location="Himalaya").all()
+        items = Items.query.filter(
+            Items.location.in_(locations),
+            Items.type.in_(types),
+            Items.timestamp.between(start_date, end_date)).all()
         new_search_form = SearchForm()
         new_message_form = MessageForm()
         return render_template("feed.html", index=True, items=items, form=new_search_form, locations=LOCATIONS,
