@@ -28,7 +28,8 @@ def process_text_query(query):
         if len(results):
             result_vector = [x + y for (x, y) in zip(result_vector, results[0].vector)]
             words = words + 1
-    result_vector = [x / words for x in result_vector]
+    if words > 0:
+        result_vector = [x / words for x in result_vector]
     return result_vector
 
 def process_image_query(image):
