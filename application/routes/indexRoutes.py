@@ -49,19 +49,18 @@ def MSE(l1, l2):
     l2 = np.asarray(l2)
     return ((l1 - l2) ** 2).mean(axis = 0)
 
-def distance(item, word_vec, image_vec, word_w=1, image_w=1):
+def distance(features, weights=None):
     skip = True
-    word_distance = 0
-    if item.word_vector is not None and word_vec is not None:
-        word_distance = MSE(item.word_vector, word_vec)
+    loss = 0
+    for i, feat in enumerate(features):
+        if feat[0] is None or feat[1] is None:
+            continue
         skip = False
 
-    image_distance = 0
-    if item.feature_vector is not None and image_vec is not None:
-        image_distance = MSE(item.feature_vector, image_vec)
-        skip = False
+        w = 1 if weights is None else weights[i]
+        loss += w * MSE(feat[0], feat[1])
 
-    return np.inf if skip else word_w * word_distance + image_w * image_distance
+    return np.inf if skip else loss
 
 
 @home.route("/")
@@ -116,7 +115,12 @@ def index():
             Items.location.in_(locations),
             Items.type.in_(types),
             Items.timestamp.between(start_date, end_date)).all()
-        items.sort(key = lambda item: distance(item, query_word_vector, query_image_vector))
+
+        items.sort(key = lambda item: distance([
+                (item.word_vector, query_word_vector),
+                (item.feature_vector, query_image_vector)],
+            [1, 1]))
+
         new_search_form = SearchForm()
         new_message_form = MessageForm()
         return render_template("feed.html", index=True, items=items, form=new_search_form, locations=LOCATIONS,
