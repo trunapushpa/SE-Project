@@ -69,8 +69,8 @@ def uploaditem():
                 (item.word_vector, text_feature_vector),
                 (item.feature_vector, feature_vector)],
             [1, 1]))
-        if len(notify_items) > 10:
-            notify_items = notify_items[:10]
+        if len(notify_items) > 3:
+            notify_items = notify_items[:3]
 
         db.session.add(new_item)
         db.session.commit()
