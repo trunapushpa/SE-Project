@@ -201,6 +201,10 @@
         </div>
     </div>
 
+    {% if items|length == 0 %}
+        <h4>No items yet.</h4>
+    {% endif %}
+
     <div class="card-columns">
         {% for item in items %}
             <div class="card mb-3 item-card" data-toggle="modal" id="item-card-{{ item.item_id }}"
