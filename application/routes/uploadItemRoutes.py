@@ -72,15 +72,15 @@ def uploaditem():
                 (item.word_vector, text_feature_vector),
                 (item.feature_vector, feature_vector)],
             [1, 1]))
-        if len(notify_items) > 3:
-            notify_items = notify_items[:3]
+        if len(notify_items) > 5:
+            notify_items = notify_items[:5]
 
         db.session.add(new_item)
         db.session.commit()
 
         users_sent = []
         for item in notify_items:
-            if item.user_id not in users_sent:
+            if item.user_id not in users_sent and item.user_id != current_user.user_id:
                 send_system_message(item.user_id, new_item.item_id)
                 users_sent.append(item.user_id)
 
