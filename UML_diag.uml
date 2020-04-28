@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.items</OriginalElement>
+  <nodes>
+    <node x="958.5897305705707" y="3.1897617587837033">9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.items</node>
+    <node x="126.81337298073407" y="224.2045248373995">9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.notification</node>
+    <node x="993.6036876344631" y="441.26415163431705">9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.messages</node>
+    <node x="505.8195494676643" y="192.74272823486535">9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.users</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.items" target="9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.users">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.notification" target="9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.users">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.messages" target="9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.items">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.messages" target="9ee48afb-9803-476f-89c3-1b3dcfbd3dcc.TABLE:lostnfound.public.users">
+      <point x="2.5" y="-4.330127018922212" />
+      <point x="2.5" y="-4.3301270189221945" />
+    </edge>
+  </edges>
+  <settings layout="Circular" zoom="0.9774647887323944" x="648.5" y="315.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+
