@@ -127,6 +127,9 @@ def index():
                 (item.feature_vector, query_image_vector)],
             [1, 1]))
 
+        if len(items) > 4:
+            items = items[:4]
+
         new_search_form = SearchForm()
         new_message_form = MessageForm()
         return render_template("feed.html", index=True, items=items, form=new_search_form, locations=LOCATIONS,
